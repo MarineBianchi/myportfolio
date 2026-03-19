@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:imarketina.com)",
+      "Bash(npm run:*)",
+      "WebFetch(domain:www.clapat.com)"
+    ]
+  }
+}
