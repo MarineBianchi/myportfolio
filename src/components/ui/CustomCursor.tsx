@@ -3,128 +3,81 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 
+const CIRCLE_SIZE = 56;
+// Dot position within the circle (SVG centered inside 56×56):
+// SVG top offset = (56-46)/2 = 5px, dot y in SVG ≈ 41px → total = 46px
+const DOT_Y = 46;
+
 export default function CustomCursor() {
-  const dotRef  = useRef<HTMLDivElement>(null);
-  const ringRef = useRef<HTMLDivElement>(null);
-  const viewRef = useRef<HTMLDivElement>(null);
+  const nRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const dot  = dotRef.current;
-    const ring = ringRef.current;
-    const view = viewRef.current;
-    if (!dot || !ring || !view) return;
+    const n = nRef.current;
+    if (!n) return;
 
-    // ── Track mouse ───────────────────────────────────────────
     const onMouseMove = (e: MouseEvent) => {
-      const x = e.clientX;
-      const y = e.clientY;
-      gsap.to(dot,  { x, y, duration: 0.08, ease: "power3.out" });
-      gsap.to(ring, { x, y, duration: 0.38, ease: "power3.out" });
-      gsap.to(view, { x, y, duration: 0.22, ease: "power3.out" });
+      gsap.to(n, { x: e.clientX, y: e.clientY, duration: 0.28, ease: "power3.out" });
     };
 
-    // ── Default link / button hover ───────────────────────────
-    const onEnterLink = () => {
-      gsap.to(ring, { scale: 2.5, opacity: 0.5, duration: 0.3 });
-      gsap.to(dot,  { scale: 0, duration: 0.3 });
+    // Clickable or view → white "n" on black circle
+    const onEnterActive = () => {
+      gsap.to(n, { backgroundColor: "var(--foreground)", color: "var(--background)", duration: 0.25, ease: "power2.out" });
     };
-    const onLeaveLink = () => {
-      gsap.to(ring, { scale: 1, opacity: 1, duration: 0.3 });
-      gsap.to(dot,  { scale: 1, duration: 0.3 });
-    };
-
-    // ── "VIEW" cursor ─────────────────────────────────────────
-    const onEnterView = () => {
-      gsap.to(dot,  { scale: 0, duration: 0.25 });
-      gsap.to(ring, { scale: 0, opacity: 0, duration: 0.25 });
-      gsap.to(view, { scale: 1, opacity: 1, duration: 0.35, ease: "back.out(1.4)" });
-    };
-    const onLeaveView = () => {
-      gsap.to(view, { scale: 0, opacity: 0, duration: 0.25, ease: "power2.in" });
-      gsap.to(ring, { scale: 1, opacity: 1, duration: 0.3 });
-      gsap.to(dot,  { scale: 1, duration: 0.3 });
+    const onLeaveActive = () => {
+      gsap.to(n, { backgroundColor: "transparent", color: "var(--foreground)", duration: 0.25, ease: "power2.out" });
     };
 
     window.addEventListener("mousemove", onMouseMove);
 
-    // Regular interactive elements
-    const links = document.querySelectorAll("a, button");
-    links.forEach((el) => {
-      el.addEventListener("mouseenter", onEnterLink);
-      el.addEventListener("mouseleave", onLeaveLink);
-    });
-
-    // "VIEW" trigger — applied to elements with data-cursor="view"
-    const viewEls = document.querySelectorAll("[data-cursor='view']");
-    viewEls.forEach((el) => {
-      el.addEventListener("mouseenter", onEnterView);
-      el.addEventListener("mouseleave", onLeaveView);
+    const activeEls = document.querySelectorAll("a, button, [data-cursor='view'], [role='button']");
+    activeEls.forEach((el) => {
+      el.addEventListener("mouseenter", onEnterActive);
+      el.addEventListener("mouseleave", onLeaveActive);
     });
 
     return () => {
       window.removeEventListener("mousemove", onMouseMove);
-      links.forEach((el) => {
-        el.removeEventListener("mouseenter", onEnterLink);
-        el.removeEventListener("mouseleave", onLeaveLink);
-      });
-      viewEls.forEach((el) => {
-        el.removeEventListener("mouseenter", onEnterView);
-        el.removeEventListener("mouseleave", onLeaveView);
+      activeEls.forEach((el) => {
+        el.removeEventListener("mouseenter", onEnterActive);
+        el.removeEventListener("mouseleave", onLeaveActive);
       });
     };
   }, []);
 
   return (
-    <>
-      {/* Dot */}
-      <div
-        ref={dotRef}
-        className="fixed top-0 left-0 pointer-events-none"
-        style={{
-          zIndex: 9999,
-          width: 8, height: 8,
-          borderRadius: "50%",
-          backgroundColor: "var(--foreground)",
-          transform: "translate(-50%, -50%)",
-        }}
-      />
-
-      {/* Ring */}
-      <div
-        ref={ringRef}
-        className="fixed top-0 left-0 pointer-events-none border"
-        style={{
-          zIndex: 9998,
-          width: 36, height: 36,
-          borderRadius: "50%",
-          borderColor: "var(--foreground)",
-          transform: "translate(-50%, -50%)",
-        }}
-      />
-
-      {/* VIEW label */}
-      <div
-        ref={viewRef}
-        className="fixed top-0 left-0 pointer-events-none"
-        style={{
-          zIndex: 9999,
-          width: 84, height: 84,
-          borderRadius: "50%",
-          background: "var(--foreground)",
-          color: "var(--background)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontSize: "0.62rem",
-          fontWeight: 700,
-          letterSpacing: "0.14em",
-          textTransform: "uppercase",
-          transform: "translate(-50%, -50%) scale(0)",
-          opacity: 0,
-        }}
+    <div
+      ref={nRef}
+      className="fixed top-0 left-0 pointer-events-none"
+      style={{
+        zIndex: 9999,
+        width: CIRCLE_SIZE,
+        height: CIRCLE_SIZE,
+        borderRadius: "50%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "transparent",
+        color: "var(--foreground)",
+        // Offset so the dot under the "n" aligns with the cursor
+        marginLeft: -(CIRCLE_SIZE / 2),
+        marginTop: -DOT_Y,
+      }}
+    >
+      <svg
+        width="22"
+        height="46"
+        viewBox="37.5 1 14 30"
+        xmlns="http://www.w3.org/2000/svg"
       >
-        VIEW&nbsp;→
-      </div>
-    </>
+        <path
+          d="M38.57,20.85V8.03c0-1.84,.56-3.35,1.67-4.51,1.11-1.16,2.55-1.75,4.32-1.75s3.21,.58,4.32,1.75c1.11,1.17,1.67,2.67,1.67,4.51v12.82c0,.36-.18,.54-.54,.54h-2.23c-.36,0-.54-.18-.54-.54V7.91c0-.92-.24-1.66-.71-2.21-.47-.55-1.13-.83-1.98-.83s-1.5,.28-1.98,.83c-.47,.55-.71,1.29-.71,2.21v12.94c0,.36-.18,.54-.54,.54h-2.23c-.36,0-.54-.18-.54-.54Z"
+          fill="currentColor"
+        />
+        <path
+          d="M43.11,28.2c-.37-.37-.56-.84-.56-1.4s.19-1.07,.56-1.44,.84-.56,1.4-.56,1.04,.19,1.42,.58c.38,.38,.58,.86,.58,1.42,0,.51-.2,.97-.6,1.36-.4,.4-.86,.6-1.4,.6s-1.03-.19-1.4-.56Z"
+          fill="currentColor"
+        />
+      </svg>
+    </div>
   );
 }
