@@ -5,11 +5,11 @@ import { gsap } from "gsap";
 import Image from "next/image";
 
 const videos = [
-  { src: "/img/videos/APIHIVE.mp4" },
-  { src: "/img/videos/AlizeeChaz.mov" },
-  { src: "/img/videos/LeaLosteo.mp4" },
-  { src: "/img/videos/eau&dev.mp4" },
-  { src: "/img/videos/jardinsNini.mp4" },
+  { src: "/videos/APIHIVE.mp4" },
+  { src: "/videos/AlizeeChaz.mov" },
+  { src: "/videos/LeaLosteo.mp4" },
+  { src: "/videos/eau&dev.mp4" },
+  { src: "/videos/jardinsNini.mp4" },
 ];
 
 const allVideos = [...videos, ...videos];
@@ -85,16 +85,19 @@ export default function Hero() {
           alignItems: "center",
           justifyContent: "space-between",
           padding: "0 clamp(2.5rem, 5vw, 5rem)",
-          borderBottom: "1px solid var(--border)",
           background: "var(--background)",
         }}
       >
         <a
           href="#"
-          style={{ fontWeight: 700, fontSize: "1rem", letterSpacing: "-0.02em", color: "var(--foreground)" }}
+          style={{ display: "block", lineHeight: 0 }}
           onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0 }); }}
         >
-          Marine.
+          <img
+            src="/videos/logo.svg"
+            alt="Marine Bianchi"
+            style={{ height: 28, display: "block", filter: "brightness(0)" }}
+          />
         </a>
         <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
           <span
@@ -145,7 +148,7 @@ export default function Hero() {
               marginBottom: "2rem",
             }}
           >
-            Full Stack Developer & Graphic Designer
+            Bienvenue.
           </p>
 
           <h1
@@ -159,7 +162,7 @@ export default function Hero() {
               maxWidth: "16ch",
             }}
           >
-            Je conçois des expériences digitales mémorables.
+            Entrez dans l'expérience digitale.
           </h1>
 
           <p
@@ -174,29 +177,45 @@ export default function Hero() {
           >
             Marine Bianchi — Développeuse Full Stack & Graphiste.
             <br />
-            Basée en France, disponible partout.
+            Studio ouvert · Basée en France.
           </p>
         </div>
 
-        {/* Right — photo, extends into reel zone */}
+        {/* Right — deux photos */}
         <div
           className="h-img"
           style={{
-            width: "clamp(260px, 31vw, 480px)",
+            width: "clamp(300px, 36vw, 560px)",
             flexShrink: 0,
-            borderLeft: "1px solid var(--border)",
-            padding: "clamp(1.2rem, 2vw, 2rem) 0 0 0",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "clamp(0.6rem, 1vw, 1rem)",
+            padding: "clamp(1rem, 1.5vw, 1.5rem)",
+            paddingBottom: `calc(${REEL_GAP}px + clamp(130px, 17vh, 190px) + 1rem)`,
+            overflow: "hidden",
           }}
         >
-          {/* Inner wrapper: image fills this, respecting the outer padding */}
-          <div style={{ position: "relative", width: "100%", height: "100%", overflow: "hidden" }}>
+          {/* m2 — grande, portrait */}
+          <div style={{ flex: 5, minWidth: 0, position: "relative", aspectRatio: "3/4", overflow: "hidden" }}>
             <Image
-              src="/img/me.png"
+              src="/img/m2.png"
               alt="Marine Bianchi"
               fill
-              sizes="(max-width: 768px) 0px, 31vw"
+              sizes="(max-width: 768px) 0px, 20vw"
               className="object-cover object-center"
               priority
+            />
+          </div>
+
+          {/* m3 — légèrement décalée */}
+          <div style={{ flex: 4, minWidth: 0, position: "relative", aspectRatio: "2/3", overflow: "hidden", marginTop: "clamp(2rem, 4vw, 5rem)" }}>
+            <Image
+              src="/img/m3.jpg"
+              alt=""
+              fill
+              sizes="(max-width: 768px) 0px, 15vw"
+              className="object-cover object-center"
             />
           </div>
         </div>
@@ -212,8 +231,7 @@ export default function Hero() {
           height: REEL,
           zIndex: 10,
           overflow: "hidden",
-          borderTop: "1px solid var(--border)",
-          background: "var(--background)",
+          background: "#000",
         }}
       >
         <div
@@ -222,16 +240,16 @@ export default function Hero() {
             display: "flex",
             alignItems: "center",
             gap: 8,
-            padding: "8px",
             width: "max-content",
             height: "100%",
+            padding: "8px 0",
           }}
         >
           {allVideos.map((v, i) => (
             <div
               key={i}
               style={{
-                height: "calc(100% - 16px)",
+                height: "calc(100% - 16px)", /* 16px = 2 × 8px padding vertical */
                 aspectRatio: "16/9",
                 flexShrink: 0,
                 overflow: "hidden",
@@ -264,7 +282,6 @@ export default function Hero() {
           justifyContent: "space-between",
           padding: "0 clamp(2.5rem, 5vw, 5rem)",
           background: "var(--background)",
-          borderTop: "1px solid var(--border)",
         }}
       >
         <nav style={{ display: "flex", gap: "2.5rem" }}>

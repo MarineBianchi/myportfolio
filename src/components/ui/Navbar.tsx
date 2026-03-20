@@ -73,7 +73,11 @@ export default function Navbar() {
           window.scrollTo({ top: 0, behavior: "smooth" });
         }}
       >
-        Marine.
+        <img
+          src="/videos/logo.svg"
+          alt="Marine Bianchi"
+          style={{ height: 18, display: "block", filter: "brightness(0)" }}
+        />
       </a>
 
       <nav className="flex items-center gap-8">

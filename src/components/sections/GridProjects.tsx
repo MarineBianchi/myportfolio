@@ -172,18 +172,9 @@ export default function GridProjects() {
                     gap: "1rem",
                   }}
                 >
-                  <div style={{ display: "flex", alignItems: "baseline", gap: "1rem" }}>
-                    <span
-                      style={{
-                        fontFamily: "monospace",
-                        fontSize: "0.65rem",
-                        color: "var(--muted)",
-                        letterSpacing: "0.06em",
-                        flexShrink: 0,
-                      }}
-                    >
-                      {project.id}
-                    </span>
+                  <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                    {/* ② Circle on hover */}
+                    <span className="gp-id-circle">{project.id}</span>
                     <h3
                       style={{
                         fontSize: "clamp(0.9rem, 1.2vw, 1.15rem)",

@@ -61,11 +61,11 @@ export default function Contact() {
           className="contact-item text-xs uppercase tracking-[0.3em] mb-8"
           style={{ color: "rgba(255,255,255,0.4)" }}
         >
-          Travaillons ensemble
+          Frappez.
         </p>
 
         <h2 ref={titleRef} className="heading-xl mb-12 max-w-4xl" style={{ color: "var(--background)" }}>
-          Un projet<br />en tête ?
+          La porte<br />est ouverte.
         </h2>
 
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-12">
@@ -74,8 +74,8 @@ export default function Contact() {
               className="contact-item body-lg max-w-lg mb-8"
               style={{ color: "rgba(255,255,255,0.5)" }}
             >
-              Disponible pour des missions freelance, des collaborations
-              ou des postes en CDI. N&apos;hésite pas à me contacter.
+              La porte est toujours ouverte — pour une mission freelance,
+              une collaboration créative, ou juste une conversation.
             </p>
 
             <a

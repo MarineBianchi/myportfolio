@@ -5,43 +5,66 @@ import { gsap } from "gsap";
 
 export default function SplashScreen() {
   const overlayRef = useRef<HTMLDivElement>(null);
+  const taglineRef = useRef<HTMLParagraphElement>(null);
   const [hidden, setHidden] = useState(false);
 
   useEffect(() => {
-    // Lock scroll
     document.body.style.overflow = "hidden";
 
+    const W = window.innerWidth;
+    const H = window.innerHeight;
+
+    // Le "n" occupe ~50.7% en x et ~33% en y dans le viewBox du logo
+    // → transformOrigin centré sur le "n" pour que le scale parte de lui
+    const N_ORIGIN = "50.7% 33%";
+    // Scale large — le "n" doit déborder de l'écran dans toutes les directions
+    const N_SCALE  = Math.max(W, H) / 18;
+
     const tl = gsap.timeline({
-      delay: 0.2,
+      delay: 0.15,
       onComplete: () => {
         document.body.style.overflow = "";
         setHidden(true);
       },
     });
 
-    // ① n arch + dot en premier
-    tl.fromTo(
+    tl
+    // ① n + dot apparaissent en premier — la porte se révèle
+    .fromTo(
       ["#logo-n", "#logo-dot"],
       { opacity: 0, scale: 0.75, transformOrigin: "center center" },
-      { opacity: 1, scale: 1, duration: 0.7, ease: "back.out(1.6)", stagger: 0.12 }
+      { opacity: 1, scale: 1, duration: 0.55, ease: "back.out(1.4)", stagger: 0.1 }
     )
 
-    // ② Reste des lettres en gris, de gauche à droite
+    // ② Reste des lettres
     .to(["#logo-b", "#logo-i1", "#logo-a", "#logo-c", "#logo-h", "#logo-i2"], {
-      opacity: 1,
-      duration: 0.35,
-      ease: "power2.out",
-      stagger: 0.1,
-    }, "+=0.2")
+      opacity: 1, duration: 0.3, ease: "power2.out", stagger: 0.07,
+    }, "+=0.1")
 
-    // ③ Pause
-    .to({}, { duration: 0.5 })
+    // ③ Tagline
+    .to(taglineRef.current, {
+      opacity: 1, y: 0, duration: 0.4, ease: "power3.out",
+    }, "+=0.15")
 
-    // ④ Exit — fondu
-    .to(overlayRef.current, {
-      opacity: 0,
-      duration: 0.7,
-      ease: "power2.inOut",
+    // ④ Pause courte
+    .to({}, { duration: 0.35 })
+
+    // ⑤ Les autres lettres + tagline disparaissent — seul le "n" reste
+    .to(["#logo-b", "#logo-i1", "#logo-a", "#logo-c", "#logo-h", "#logo-i2", taglineRef.current], {
+      opacity: 0, duration: 0.25, ease: "power2.in",
+    })
+
+    // ⑥ Le "n" grossit vite — l'overlay reste OPAQUE (pas de site visible autour)
+    .to("#splash-logo", {
+      scale: N_SCALE,
+      transformOrigin: N_ORIGIN,
+      duration: 0.5,
+      ease: "power3.in",
+    })
+
+    // ⑦ Tout disparaît d'un coup — le site se révèle
+    .to([overlayRef.current, "#splash-logo"], {
+      opacity: 0, duration: 0.2, ease: "none",
     });
 
     return () => {
@@ -53,23 +76,30 @@ export default function SplashScreen() {
   if (hidden) return null;
 
   return (
-    <div
-      ref={overlayRef}
-      style={{
-        position: "fixed",
-        inset: 0,
-        background: "var(--background)",
-        zIndex: 99999,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 87.78 34.9"
-        style={{ width: "clamp(200px, 30vw, 460px)" }}
+    <div style={{ position: "fixed", inset: 0, zIndex: 99999 }}>
+      {/* Overlay fond */}
+      <div ref={overlayRef} style={{ position: "absolute", inset: 0, background: "var(--background)" }} />
+
+      {/* Logo + tagline — centré, au-dessus de l'overlay */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: "1.8rem",
+          zIndex: 2,
+          pointerEvents: "none",
+        }}
       >
+        <svg
+          id="splash-logo"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 87.78 34.9"
+          style={{ width: "clamp(160px, 22vw, 340px)" }}
+        >
         {/* b */}
         <path
           id="logo-b"
@@ -126,7 +156,24 @@ export default function SplashScreen() {
           opacity="0"
           d="M43.11,28.2c-.37-.37-.56-.84-.56-1.4s.19-1.07,.56-1.44,.84-.56,1.4-.56,1.04,.19,1.42,.58c.38,.38,.58,.86,.58,1.42,0,.51-.2,.97-.6,1.36-.4,.4-.86,.6-1.4,.6s-1.03-.19-1.4-.56Z"
         />
-      </svg>
+        </svg>
+
+        {/* Tagline — apparaît après le logo */}
+        <p
+          ref={taglineRef}
+          style={{
+            opacity: 0,
+            transform: "translateY(8px)",
+            fontSize: "0.68rem",
+            textTransform: "uppercase",
+            letterSpacing: "0.28em",
+            color: "var(--muted)",
+            fontWeight: 500,
+          }}
+        >
+          Bonjour, vous pouvez entrer.
+        </p>
+      </div>
     </div>
   );
 }

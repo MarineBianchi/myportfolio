@@ -9,7 +9,7 @@ const projects = [
     category: "Développement Web",
     year: "2024",
     description: "Plateforme de gestion d'APIs avec dashboard interactif, authentification et documentation en temps réel.",
-    video: "/img/videos/APIHIVE.mp4",
+    video: "/videos/APIHIVE.mp4",
   },
   {
     id: "02",
@@ -17,7 +17,7 @@ const projects = [
     category: "Design Graphique",
     year: "2024",
     description: "Identité visuelle complète — logotype, charte graphique et supports de communication print & digital.",
-    video: "/img/videos/AlizeeChaz.mov",
+    video: "/videos/AlizeeChaz.mov",
   },
   {
     id: "03",
@@ -25,7 +25,7 @@ const projects = [
     category: "Développement Web",
     year: "2024",
     description: "Site vitrine avec système de réservation en ligne, animations fluides et intégration CMS headless.",
-    video: "/img/videos/LeaLosteo.mp4",
+    video: "/videos/LeaLosteo.mp4",
   },
   {
     id: "04",
@@ -33,7 +33,7 @@ const projects = [
     category: "Creative Dev",
     year: "2023",
     description: "Expérience web immersive avec shaders GLSL, storytelling interactif et effets de parallaxe WebGL.",
-    video: "/img/videos/eau&dev.mp4",
+    video: "/videos/eau&dev.mp4",
   },
   {
     id: "05",
@@ -41,7 +41,7 @@ const projects = [
     category: "UI/UX Design",
     year: "2023",
     description: "Refonte UX complète d'une boutique en ligne — parcours utilisateur, prototypage et système de design.",
-    video: "/img/videos/jardinsNini.mp4",
+    video: "/videos/jardinsNini.mp4",
   },
 ];
 
