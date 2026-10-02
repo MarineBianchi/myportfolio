@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { otherProjects } from "@/data/projects";
@@ -11,10 +11,31 @@ export default function OtherProjects() {
   const pinWrapRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
 
+  // Below 768px the viewport is too narrow for a pinned fullscreen panel
+  // per item to read well, and `pin: true` fights the page's natural
+  // vertical scroll on touch — falls back to a plain horizontally
+  // scrollable strip instead (see JSX below).
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 768px)");
+    const update = () => setIsMobile(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+
   useEffect(() => {
     const pinWrap = pinWrapRef.current;
     const track = trackRef.current;
-    if (!pinWrap || !track) return;
+    // Reads matchMedia directly rather than trusting the `isMobile` state:
+    // on mount this effect and the state-setting effect above both run off
+    // the same (still-`false`) initial render, so the state alone would let
+    // this fire once on phones with `pin: true` before the next render
+    // corrects it — leaving a stray pin-spacer sized for the desktop
+    // 100dvh layout sitting as dead space above the footer.
+    const mobile = window.matchMedia("(max-width: 768px)").matches;
+    if (!pinWrap || !track || mobile) return;
 
     const ctx = gsap.context(() => {
       // Each panel is a full viewport wide — vertical scroll drives the
@@ -36,7 +57,7 @@ export default function OtherProjects() {
     }, pinWrap);
 
     return () => ctx.revert();
-  }, []);
+  }, [isMobile]);
 
   return (
     <section
@@ -92,28 +113,54 @@ export default function OtherProjects() {
         </div>
       </div>
 
-      {/* ── Pinned fullscreen horizontal sequence ──────────────── */}
+      {/* ── Horizontal sequence: pinned fullscreen on desktop, a plain
+          swipeable strip on mobile (see isMobile above) ──────────── */}
       <div
         ref={pinWrapRef}
-        style={{ position: "relative", height: "100vh", overflow: "hidden" }}
+        style={
+          isMobile
+            ? { position: "relative", overflowX: "auto", WebkitOverflowScrolling: "touch" }
+            : { position: "relative", height: "100dvh", overflow: "hidden" }
+        }
       >
         <div
           ref={trackRef}
-          style={{
-            display: "flex",
-            height: "100%",
-            width: `${otherProjects.length * 100}vw`,
-          }}
+          style={
+            isMobile
+              ? {
+                  display: "flex",
+                  gap: "1rem",
+                  padding: "0 clamp(1.5rem, 5vw, 2.5rem) 1rem",
+                  scrollSnapType: "x mandatory",
+                }
+              : {
+                  display: "flex",
+                  height: "100%",
+                  width: `${otherProjects.length * 100}vw`,
+                }
+          }
         >
           {otherProjects.map((item) => (
             <div
               key={item.id}
-              style={{
-                position: "relative",
-                width: "100vw",
-                height: "100%",
-                flexShrink: 0,
-              }}
+              style={
+                isMobile
+                  ? {
+                      position: "relative",
+                      width: "80vw",
+                      height: "65vh",
+                      flexShrink: 0,
+                      scrollSnapAlign: "start",
+                      borderRadius: 8,
+                      overflow: "hidden",
+                    }
+                  : {
+                      position: "relative",
+                      width: "100vw",
+                      height: "100%",
+                      flexShrink: 0,
+                    }
+              }
             >
               <img
                 src={item.image}

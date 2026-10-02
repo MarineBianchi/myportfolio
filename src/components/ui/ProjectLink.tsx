@@ -44,7 +44,13 @@ export default function ProjectLink({ children, href, onClick, ...rest }: Projec
     if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
 
     const cursor = document.getElementById("site-cursor");
-    if (!cursor) return; // no custom cursor (e.g. touch) — fall back to normal navigation
+    // #site-cursor is always mounted, so checking for its existence never
+    // actually detects touch — it has to be a real capability check. On
+    // touch the element is hidden via CSS and never positioned, so using
+    // its (stale, 0,0) rect would make the transition expand from the
+    // wrong corner instead of falling back to normal navigation.
+    const hasCustomCursor = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+    if (!cursor || !hasCustomCursor) return;
 
     e.preventDefault();
 

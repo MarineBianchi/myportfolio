@@ -76,6 +76,7 @@ export default function Hero() {
     <section
       ref={sectionRef}
       id="hero"
+      className="hero-section"
       style={{
         height: "100svh",
         position: "relative",
@@ -128,6 +129,7 @@ export default function Hero() {
       {/* ─── Main content: text left + photo right ───────────── */}
       {/* The photo extends behind the reel strip (overlap effect) */}
       <div
+        className="h-main"
         style={{
           position: "absolute",
           top: BAR,
@@ -138,6 +140,7 @@ export default function Hero() {
       >
         {/* Left — text */}
         <div
+          className="h-text"
           style={{
             flex: 1,
             display: "flex",
@@ -178,7 +181,7 @@ Je crée des sites et des identités visuelles qui vous ressemblent.          </
 
         {/* Right — deux photos qui descendent sous la bande */}
         <div
-          className="h-img"
+          className="h-img h-photos"
           style={{
             width: "clamp(400px, 52vw, 880px)",
             flexShrink: 0,
@@ -191,24 +194,24 @@ Je crée des sites et des identités visuelles qui vous ressemblent.          </
           }}
         >
           {/* m2 — remplit toute la hauteur */}
-          <div style={{ flex: 5, minWidth: 0, position: "relative", overflow: "hidden" }}>
+          <div className="h-photo-1" style={{ flex: 5, minWidth: 0, position: "relative", overflow: "hidden" }}>
             <Image
               src="/img/m2.png"
               alt="Marine Bianchi"
               fill
-              sizes="(max-width: 768px) 0px, 20vw"
+              sizes="(max-width: 768px) 45vw, 20vw"
               className="object-cover object-top"
               priority
             />
           </div>
 
           {/* m3 — décalée vers le bas, déborde en bas */}
-          <div style={{ flex: 4, minWidth: 0, position: "relative", overflow: "hidden", marginTop: "clamp(3rem, 5vw, 6rem)" }}>
+          <div className="h-photo-2" style={{ flex: 4, minWidth: 0, position: "relative", overflow: "hidden", marginTop: "clamp(3rem, 5vw, 6rem)" }}>
             <Image
               src="/img/m3.jpg"
               alt=""
               fill
-              sizes="(max-width: 768px) 0px, 15vw"
+              sizes="(max-width: 768px) 40vw, 15vw"
               className="object-cover object-top"
             />
           </div>
@@ -282,11 +285,12 @@ Je crée des sites et des identités visuelles qui vous ressemblent.          </
           background: "var(--background)",
         }}
       >
-        <nav style={{ display: "flex", gap: "2.5rem" }}>
+        <nav className="h-botbar-nav" style={{ display: "flex", gap: "2.5rem" }}>
           {navLinks.map((link) => (
             <button
               key={link.href}
               onClick={() => scrollTo(link.href)}
+              className="h-nav-link group"
               style={{
                 fontSize: "0.875rem",
                 fontWeight: 500,
@@ -297,7 +301,6 @@ Je crée des sites et des identités visuelles qui vous ressemblent.          </
                 cursor: "none",
                 padding: 0,
               }}
-              className="group"
             >
               {link.label}
               <span
@@ -316,6 +319,7 @@ Je crée des sites et des identités visuelles qui vous ressemblent.          </
         </nav>
 
         <span
+          className="h-date"
           style={{
             fontSize: "0.72rem",
             letterSpacing: "0.06em",

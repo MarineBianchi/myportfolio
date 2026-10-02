@@ -28,6 +28,22 @@ body {
   cursor: none;
 }
 
+/* The custom cursor (#site-cursor, mounted unconditionally in layout.tsx)
+   only ever gets positioned by mousemove — on a touch device that never
+   fires, so without this it sits stuck at its initial top-left corner for
+   every pageview. Devices with a real mouse (hover: hover + pointer: fine)
+   keep the custom cursor and the hidden native one; everything else gets
+   the native cursor back and the custom one hidden outright. !important is
+   needed because the component sets display inline. */
+@media not all and (hover: hover) and (pointer: fine) {
+  body {
+    cursor: auto;
+  }
+  #site-cursor {
+    display: none !important;
+  }
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 4px;
@@ -108,4 +124,143 @@ body {
 /* Hide scrollbar on drag track */
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
+}
+
+/* ====================================================================
+   Responsive (≤768px) — the site had no breakpoint-based rules at all
+   before this pass; most spacing/type already scales fluidly via
+   clamp(), these rules cover the structural layout changes that don't.
+   ==================================================================== */
+
+/* Navbar: logo + tagline + 4 links is a single unwrapped row with no
+   room to spare below ~768px — collapses to a hamburger-triggered
+   full-screen menu instead (see Navbar.tsx). */
+@media (max-width: 768px) {
+  .navbar-tagline,
+  .navbar-dot {
+    display: none;
+  }
+  .navbar-links {
+    display: none !important;
+  }
+  .navbar-burger {
+    display: flex !important;
+  }
+}
+@media (min-width: 769px) {
+  .navbar-overlay {
+    display: none !important;
+  }
+}
+
+/* Footer: nav/email-socials 2-up grid cramps the email + social links into
+   a half-width right column on mobile — stacks instead. */
+@media (max-width: 768px) {
+  .footer-top-grid {
+    grid-template-columns: 1fr !important;
+    gap: 3rem !important;
+  }
+  .footer-contact-col {
+    align-items: flex-start !important;
+  }
+  .footer-email {
+    text-align: left !important;
+  }
+}
+
+/* Hero: the text/photo flex row and the absolute top/bottom bars are built
+   for desktop (photo column clamp() floors at 400px — wider than a phone
+   screen — and everything overlaps via absolute positioning assuming a
+   fixed 100svh section height). On mobile this switches to a normal
+   stacked flow instead: title text, then the two photos side by side at
+   their own height, then the video reel below — the top/bottom bars stay
+   absolute (they're short) but the section grows to fit its content and
+   reserves space for them via padding. */
+@media (max-width: 768px) {
+  .hero-section {
+    height: auto !important;
+    min-height: 100svh !important;
+    padding-bottom: 60px !important;
+  }
+  .h-main {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    flex-direction: column !important;
+    padding: calc(60px + 1.5rem) clamp(1.5rem, 5vw, 2.5rem) 0 !important;
+    gap: 1.25rem;
+  }
+  .h-text {
+    padding: 0 !important;
+    flex: none !important;
+  }
+  .h-title {
+    max-width: none !important;
+  }
+  .h-photos {
+    width: 100% !important;
+    height: 42vh !important;
+    flex-shrink: 0 !important;
+    align-self: auto !important;
+    padding: 0 !important;
+  }
+  .h-photo-2 {
+    margin-top: 1.5rem !important;
+  }
+  .h-reel {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    margin-top: 1.25rem;
+  }
+  .h-botbar-nav {
+    gap: 1rem !important;
+  }
+  .h-nav-link {
+    font-size: 0.72rem !important;
+  }
+  .h-date {
+    display: none !important;
+  }
+}
+
+/* Capabilities: the 3-up grid (number / title / tools) floors the title
+   and tools columns to ~120px each on a phone screen — title wraps into
+   several lines and the tools list (sometimes 6+ items) breaks into a
+   tall stack of single words. Collapses to number+title on one row, tools
+   spanning full width below. */
+@media (max-width: 768px) {
+  .cap-row {
+    grid-template-columns: auto 1fr !important;
+    row-gap: 0.75rem !important;
+  }
+  .cap-tools {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Projects: the info band's row 1 (id+title on the left, category+year+
+   arrow on the right) is a single unwrapped flex row inside a fixed-height
+   band — doesn't fit a 375px screen. Drops the secondary metadata (kept
+   on the project's own detail page) and leaves title + arrow, which fits. */
+@media (max-width: 768px) {
+  .proj-meta {
+    display: none;
+  }
+}
+
+/* Works (photo showcase above "Savoir-faire"): both photos are ~3:2
+   landscape — shows them uncropped on mobile instead of covering the
+   (taller, --s * 100dvh-driven) frame. The frame's own height on mobile is
+   set directly in Works.tsx (inline style, not here — see its comment for
+   why: a `.work-frame` rule here was silently dropped by the build's CSS
+   minifier while this sibling rule survived untouched). */
+@media (max-width: 768px) {
+  .work-img {
+    object-fit: contain !important;
+  }
 }

@@ -27,6 +27,21 @@ export default function PhotoShowcase() {
   const b = useRef<HTMLDivElement>(null);
 
   const [reducedMotion, setReducedMotion] = useState(false);
+  // Drives the frame's height directly (see JSX below) instead of through a
+  // CSS media query: a `.work-frame { height: auto !important; aspect-ratio:
+  // 3/2 !important; }` rule was silently dropped by the build's CSS
+  // minifier (Lightning CSS) while an identical sibling rule in the same
+  // block survived — not worth chasing further when the inline style is
+  // just as reliable and matches the pattern already used for reducedMotion.
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 768px)");
+    const update = () => setIsMobile(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -78,7 +93,7 @@ export default function PhotoShowcase() {
 
   if (reducedMotion) {
     return (
-      <section className="relative h-screen" style={{ zIndex: 20 }}>
+      <section className="relative h-dvh" style={{ zIndex: 20 }}>
         <Image src={PHOTO_B} alt="" fill sizes="100vw" priority className="object-cover" />
       </section>
     );
@@ -94,20 +109,33 @@ export default function PhotoShowcase() {
       // pinned Statement section right above it.
       style={{ height: "500vh", zIndex: 20 }}
     >
-      <div className="sticky top-0 h-screen overflow-hidden">
+      <div className="sticky top-0 h-dvh overflow-hidden">
         <div ref={bg} className="absolute inset-0 will-change-transform">
           <Image src={BACKDROP} alt="" fill sizes="100vw" priority className="object-cover" />
         </div>
         <div
           ref={frame}
           className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 overflow-hidden shadow-[0_30px_80px_rgba(0,0,0,.35)]"
-          style={{ ["--s" as string]: 1, width: "calc(var(--s) * 100vw)", height: "calc(var(--s) * 100vh)" } as CSSProperties}
+          style={
+            {
+              ["--s" as string]: 1,
+              width: "calc(var(--s) * 100vw)",
+              // Both photos are ~3:2 landscape — on a portrait phone,
+              // `--s * 100dvh` is far taller than that ratio needs, leaving
+              // a big empty letterboxed band above/below the (object-contain)
+              // image inside the frame. Mobile instead derives height from
+              // the frame's own (still --s-animated) width at that ratio,
+              // so it hugs the photo with no dead space.
+              height: isMobile ? "auto" : "calc(var(--s) * 100dvh)",
+              aspectRatio: isMobile ? "3 / 2" : undefined,
+            } as CSSProperties
+          }
         >
           <div ref={a} className="absolute inset-0 will-change-transform">
-            <Image src={PHOTO_A} alt="" fill sizes="100vw" priority className="object-cover" />
+            <Image src={PHOTO_A} alt="" fill sizes="100vw" priority className="object-cover work-img" />
           </div>
           <div ref={b} className="absolute inset-0 will-change-transform">
-            <Image src={PHOTO_B} alt="" fill sizes="100vw" className="object-cover" />
+            <Image src={PHOTO_B} alt="" fill sizes="100vw" className="object-cover work-img" />
           </div>
         </div>
       </div>

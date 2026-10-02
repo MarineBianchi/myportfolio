@@ -249,7 +249,7 @@ export default function Capabilities() {
       {capabilities.map((cap, i) => (
         <div
           key={cap.id}
-          className={`cap-row-${i}`}
+          className={`cap-row cap-row-${i}`}
           style={{
             display: "grid",
             gridTemplateColumns: "clamp(3rem,6vw,6rem) 1fr 1fr",
@@ -287,7 +287,7 @@ export default function Capabilities() {
           </h3>
 
           {/* Tools */}
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "0.4rem 0", alignItems: "center" }}>
+          <div className="cap-tools" style={{ display: "flex", flexWrap: "wrap", gap: "0.4rem 0", alignItems: "center" }}>
             {cap.tools.map((tool, j) => (
               <span
                 key={j}

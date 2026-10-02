@@ -52,6 +52,7 @@ export default function Footer() {
     >
       {/* ── Top block ───────────────────────────────────────────── */}
       <div
+        className="footer-top-grid"
         style={{
           display: "grid",
           gridTemplateColumns: "1fr 1fr",
@@ -86,9 +87,10 @@ export default function Footer() {
         </nav>
 
         {/* Right — email + socials */}
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "2.5rem" }}>
+        <div className="footer-contact-col" style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "2.5rem" }}>
           <a
             href="mailto:hello.mb.pro@gmail.com"
+            className="footer-email"
             style={{
               fontSize: "clamp(1.4rem, 3vw, 3rem)",
               fontWeight: 400,
@@ -102,7 +104,7 @@ export default function Footer() {
             hello.mb.pro@gmail.com
           </a>
 
-          <div style={{ display: "flex", gap: "clamp(1.5rem, 4vw, 4rem)", alignItems: "center" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "clamp(1.5rem, 4vw, 4rem)", alignItems: "center" }}>
             {SOCIALS.map((s) => (
               <a
                 key={s.label}
@@ -131,7 +133,7 @@ export default function Footer() {
       </div>
 
       {/* ── Name marquee ────────────────────────────────────────── */}
-      <div style={{ overflow: "hidden", borderBottom: "1px solid rgba(255,255,255,0.1)", padding: "1.5rem 0" }}>
+      <div style={{ overflow: "hidden", padding: "1.5rem 0 2.5rem" }}>
         <div
           ref={marqueeRef}
           style={{ display: "flex", whiteSpace: "nowrap", willChange: "transform" }}
@@ -154,31 +156,6 @@ export default function Footer() {
             </span>
           ))}
         </div>
-      </div>
-
-      {/* ── Bottom bar ──────────────────────────────────────────── */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "flex-end",
-          padding: "1.8rem clamp(2.5rem, 5vw, 5rem)",
-        }}
-      >
-        <span style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
-          <span
-            style={{
-              width: 6,
-              height: 6,
-              borderRadius: "50%",
-              background: "#22c55e",
-              display: "inline-block",
-            }}
-          />
-          <span style={{ fontSize: "0.7rem", textTransform: "uppercase", letterSpacing: "0.18em", color: "rgba(255,255,255,0.6)", fontWeight: 500 }}>
-            Available for work
-          </span>
-        </span>
       </div>
     </footer>
   );

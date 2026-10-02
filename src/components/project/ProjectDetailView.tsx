@@ -247,6 +247,12 @@ function Hero({ project }: { project: Project }) {
             letterSpacing: "-0.02em",
             margin: 0,
             color: "var(--foreground)",
+            // Flex items default to a min-width that matches their content,
+            // which fights the row's `overflow: hidden` on a long title at
+            // narrow widths — let it actually shrink/wrap instead of
+            // getting clipped against the non-shrinking id badge.
+            minWidth: 0,
+            overflowWrap: "break-word",
           }}
         >
           {project.title}

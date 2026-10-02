@@ -107,7 +107,7 @@ export default function Statement() {
           position: "relative",
           zIndex: 20,
           overflow: "hidden",
-          minHeight: "100vh",
+          minHeight: "100dvh",
           display: "flex",
           alignItems: "center",
         }}
