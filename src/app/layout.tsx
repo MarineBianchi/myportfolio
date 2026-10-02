@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Hanken_Grotesk } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/ui/SmoothScroll";
@@ -13,10 +13,72 @@ const hankenGrotesk = Hanken_Grotesk({
   weight: ["300", "400", "500", "600", "700"],
 });
 
+const SITE_URL = "https://marinebianchi.com";
+const SITE_NAME = "Marine Bianchi";
+const DESCRIPTION =
+  "Marine Bianchi, développeuse full stack et designer graphique basée en France. Portfolio de sites web, identités visuelles et expériences interactives animées (GSAP, Next.js, Webflow).";
+
 export const metadata: Metadata = {
-  title: "Marine · Full Stack Developer & Graphic Designer",
-  description:
-    "Portfolio de Marine, développeuse full stack et graphiste passionnée par les interfaces animées et les expériences visuelles.",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: `${SITE_NAME} — Développeuse Full Stack & Designer Graphique`,
+    template: `%s — ${SITE_NAME}`,
+  },
+  description: DESCRIPTION,
+  keywords: [
+    "Marine Bianchi",
+    "développeuse web",
+    "développeuse full stack",
+    "designer graphique",
+    "identité visuelle",
+    "portfolio développeuse",
+    "développement web France",
+    "UI UX design",
+    "Webflow",
+    "Next.js",
+  ],
+  authors: [{ name: SITE_NAME, url: SITE_URL }],
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
+  alternates: { canonical: "/" },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-image-preview": "large" },
+  },
+  openGraph: {
+    type: "website",
+    locale: "fr_FR",
+    url: "/",
+    siteName: SITE_NAME,
+    title: `${SITE_NAME} — Développeuse Full Stack & Designer Graphique`,
+    description: DESCRIPTION,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${SITE_NAME} — Développeuse Full Stack & Designer Graphique`,
+    description: DESCRIPTION,
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#f8f7f4",
+};
+
+// Person schema: ties the site to Marine as an entity (name, role, socials)
+// for Google's knowledge graph / rich results — independent of any one page.
+const personJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: SITE_NAME,
+  url: SITE_URL,
+  jobTitle: "Développeuse Full Stack & Designer Graphique",
+  description: DESCRIPTION,
+  sameAs: [
+    "https://www.linkedin.com/in/mbian/",
+    "https://www.instagram.com/its.m.work/",
+    "https://github.com/MarineBianchi",
+  ],
 };
 
 export default function RootLayout({
@@ -27,6 +89,11 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <body className={hankenGrotesk.className}>
+        <script
+          type="application/ld+json"
+          // eslint-disable-next-line react/no-danger
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+        />
         <SmoothScroll>
           <CustomCursor />
           <Navbar />

@@ -13,9 +13,23 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const project = getProjectBySlug(slug);
   if (!project) return {};
+
+  const title = `${project.title} — ${project.category}`;
   return {
-    title: `${project.title} · Marine Bianchi`,
+    title,
     description: project.description,
+    alternates: { canonical: `/projets/${project.slug}` },
+    openGraph: {
+      type: "article",
+      url: `/projets/${project.slug}`,
+      title,
+      description: project.description,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description: project.description,
+    },
   };
 }
 
@@ -24,5 +38,26 @@ export default async function ProjectPage({ params }: Props) {
   const project = getProjectBySlug(slug);
   if (!project) notFound();
 
-  return <ProjectDetailView project={project} />;
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CreativeWork",
+    name: project.title,
+    description: project.description,
+    creator: { "@type": "Person", name: "Marine Bianchi" },
+    about: project.category,
+    datePublished: project.year,
+    url: `https://marinebianchi.com/projets/${project.slug}`,
+    ...(project.image && { image: `https://marinebianchi.com${project.image}` }),
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <ProjectDetailView project={project} />
+    </>
+  );
 }
