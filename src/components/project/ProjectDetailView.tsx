@@ -28,10 +28,10 @@ function buildMedia(project: Project): Media[] {
   ];
 }
 
-// Every photo/video on the page uses this one treatment — same layout as
+// Every photo/video on the page uses this one treatment - same layout as
 // the "Tous les projets" mosaic: a half-width image at its real ratio
 // (never cropped), alternating left/right. The entrance is a clip-path
-// reveal from the outer edge toward the center (see RevealImages) — the
+// reveal from the outer edge toward the center (see RevealImages) - the
 // image/video itself never scales or translates, only its mask does.
 function MediaBlock({
   media,
@@ -68,7 +68,7 @@ function MediaBlock({
       <RevealImages
         data-hero-media={isFirst ? true : undefined}
         style={{
-          // Videos are screen recordings — at half width their detail is
+          // Videos are screen recordings - at half width their detail is
           // unreadable, so they get most of the page width instead.
           width:
             media.type === "video"
@@ -249,7 +249,7 @@ function Hero({ project }: { project: Project }) {
             color: "var(--foreground)",
             // Flex items default to a min-width that matches their content,
             // which fights the row's `overflow: hidden` on a long title at
-            // narrow widths — let it actually shrink/wrap instead of
+            // narrow widths - let it actually shrink/wrap instead of
             // getting clipped against the non-shrinking id badge.
             minWidth: 0,
             overflowWrap: "break-word",

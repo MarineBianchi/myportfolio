@@ -5,7 +5,7 @@ import SmoothScroll from "@/components/ui/SmoothScroll";
 import CustomCursor from "@/components/ui/CustomCursor";
 import Navbar from "@/components/ui/Navbar";
 
-// Monument Grotesk isn't available as a web font license we can ship —
+// Monument Grotesk isn't available as a web font license we can ship -
 // Hanken Grotesk is the closest free match (same neutral, slightly
 // rounded neo-grotesque proportions).
 const hankenGrotesk = Hanken_Grotesk({
@@ -21,8 +21,8 @@ const DESCRIPTION =
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: `${SITE_NAME} — Développeuse Full Stack & Designer Graphique`,
-    template: `%s — ${SITE_NAME}`,
+    default: `${SITE_NAME} - Développeuse Full Stack & Designer Graphique`,
+    template: `%s - ${SITE_NAME}`,
   },
   description: DESCRIPTION,
   keywords: [
@@ -51,12 +51,12 @@ export const metadata: Metadata = {
     locale: "fr_FR",
     url: "/",
     siteName: SITE_NAME,
-    title: `${SITE_NAME} — Développeuse Full Stack & Designer Graphique`,
+    title: `${SITE_NAME} - Développeuse Full Stack & Designer Graphique`,
     description: DESCRIPTION,
   },
   twitter: {
     card: "summary_large_image",
-    title: `${SITE_NAME} — Développeuse Full Stack & Designer Graphique`,
+    title: `${SITE_NAME} - Développeuse Full Stack & Designer Graphique`,
     description: DESCRIPTION,
   },
 };
@@ -66,7 +66,7 @@ export const viewport: Viewport = {
 };
 
 // Person schema: ties the site to Marine as an entity (name, role, socials)
-// for Google's knowledge graph / rich results — independent of any one page.
+// for Google's knowledge graph / rich results - independent of any one page.
 const personJsonLd = {
   "@context": "https://schema.org",
   "@type": "Person",

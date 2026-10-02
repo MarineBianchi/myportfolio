@@ -4,12 +4,12 @@ import { useEffect, useRef } from "react";
 import ProjectLink from "@/components/ui/ProjectLink";
 import { featuredProjects as projects } from "@/data/projects";
 
-// Band height in px — info + description. Includes a little extra top
+// Band height in px - info + description. Includes a little extra top
 // padding so the sticky panel's title doesn't crowd the fixed navbar once
 // it takes over from the hero.
 const BAND_H = 196;
 
-// Shared backdrop behind every panel's video — brand identity texture,
+// Shared backdrop behind every panel's video - brand identity texture,
 // not the project's own photo. fond1/fond2/fond3 are also available for
 // reuse elsewhere.
 const PANEL_BACKDROP = "/img/fond-covers.jpg";
@@ -89,7 +89,7 @@ export default function Projects() {
             textDecoration: "none",
           }}
         >
-          {/* ── Info band — TOP ─────────────────────────────── */}
+          {/* ── Info band - TOP ─────────────────────────────── */}
           <div
             style={{
               position: "absolute",

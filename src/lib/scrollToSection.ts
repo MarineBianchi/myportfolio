@@ -13,7 +13,7 @@ function scrollToElement(el: Element) {
 
 // Scrolls to a section by id, navigating home first if it isn't on the
 // current page (Lenis owns the scroll position, so a plain `<a href="#id">`
-// doesn't reliably land on the target — this always goes through it).
+// doesn't reliably land on the target - this always goes through it).
 export function scrollToSection(
   router: { push: (href: string) => void },
   href: string
@@ -40,7 +40,7 @@ export function scrollToSection(
   requestAnimationFrame(tick);
 }
 
-// Always goes to the real homepage top — scrolling to y:0 locally would
+// Always goes to the real homepage top - scrolling to y:0 locally would
 // strand the user mid-page on any other route.
 export function scrollToHome(
   router: { push: (href: string) => void },

@@ -32,7 +32,7 @@ const navLinks = [
 
 // Fixed heights (px) for top/bottom bars
 const BAR = 60;
-// Gap between reel bottom and bottom bar — photo peeks through here
+// Gap between reel bottom and bottom bar - photo peeks through here
 const REEL_GAP = 52;
 // Reel height (CSS value)
 const REEL = "clamp(130px, 17vh, 190px)";
@@ -138,7 +138,7 @@ export default function Hero() {
           display: "flex",
         }}
       >
-        {/* Left — text */}
+        {/* Left - text */}
         <div
           className="h-text"
           style={{
@@ -179,7 +179,7 @@ Je crée des sites et des identités visuelles qui vous ressemblent.          </
 
         </div>
 
-        {/* Right — deux photos qui descendent sous la bande */}
+        {/* Right - deux photos qui descendent sous la bande */}
         <div
           className="h-img h-photos"
           style={{
@@ -193,7 +193,7 @@ Je crée des sites et des identités visuelles qui vous ressemblent.          </
             overflow: "hidden",
           }}
         >
-          {/* m2 — remplit toute la hauteur */}
+          {/* m2 - remplit toute la hauteur */}
           <div className="h-photo-1" style={{ flex: 5, minWidth: 0, position: "relative", overflow: "hidden" }}>
             <Image
               src="/img/m2.png"
@@ -205,7 +205,7 @@ Je crée des sites et des identités visuelles qui vous ressemblent.          </
             />
           </div>
 
-          {/* m3 — décalée vers le bas, déborde en bas */}
+          {/* m3 - décalée vers le bas, déborde en bas */}
           <div className="h-photo-2" style={{ flex: 4, minWidth: 0, position: "relative", overflow: "hidden", marginTop: "clamp(3rem, 5vw, 6rem)" }}>
             <Image
               src="/img/m3.jpg"
@@ -218,7 +218,7 @@ Je crée des sites et des identités visuelles qui vous ressemblent.          </
         </div>
       </div>
 
-      {/* ─── Video reel — overlaps photo, photo peeks below ─────── */}
+      {/* ─── Video reel - overlaps photo, photo peeks below ─────── */}
       <div
         className="h-reel"
         style={{

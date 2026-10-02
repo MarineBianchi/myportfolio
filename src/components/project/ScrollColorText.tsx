@@ -8,7 +8,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 // Splits `text` into words that start dim and turn solid (fading in, not
 // recoloring, so this reads correctly on both light and dark sections) one
-// by one as the section scrolls through the viewport — pinned while it plays.
+// by one as the section scrolls through the viewport - pinned while it plays.
 export default function ScrollColorText({
   text,
   pin = true,

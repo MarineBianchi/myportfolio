@@ -51,7 +51,7 @@ function ProjectEntry({ project, index }: { project: Project; index: number }) {
           </h3>
         </div>
 
-        {/* Image — sized to its own real ratio, never cropped */}
+        {/* Image - sized to its own real ratio, never cropped */}
         <div className="gp-img-wrap" style={{ position: "relative", overflow: "hidden" }}>
           {project.image ? (
             <img
@@ -101,7 +101,7 @@ export default function GridProjects() {
           ease: "power3.out",
           scrollTrigger: { trigger: item, start: "top 85%", once: true },
         });
-        // Image reveal — clip-path wipe from bottom
+        // Image reveal - clip-path wipe from bottom
         gsap.fromTo(
           item.querySelector(".gp-img-wrap"),
           { clipPath: "inset(100% 0% 0% 0%)" },
@@ -171,7 +171,7 @@ export default function GridProjects() {
         </h2>
       </div>
 
-      {/* ── Staggered list — one project at a time, lots of breathing room ── */}
+      {/* ── Staggered list - one project at a time, lots of breathing room ── */}
       <div
         style={{
           padding: "0 clamp(2.5rem, 5vw, 5rem) 10rem",

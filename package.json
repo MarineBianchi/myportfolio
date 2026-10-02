@@ -5,9 +5,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && node scripts/fix-og-images.mjs",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "deploy:zip": "npm run build && rm -f site.zip && cd out && zip -rq ../site.zip . && cd .."
   },
   "keywords": [],
   "author": "",

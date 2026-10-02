@@ -13,13 +13,13 @@ const OPEN = "inset(0% 0% 0% 0%)";
 // Wraps any children marked data-reveal="left" / "right" and, the one time
 // this block enters the viewport, clip-path-reveals them from their outer
 // edge toward the center while the whole block rises into place. Time-based
-// (not scrubbed), plays once — not a layout component, just the animation.
+// (not scrubbed), plays once - not a layout component, just the animation.
 //
 // The trigger is an IntersectionObserver, not a GSAP ScrollTrigger position
-// — deliberately. Other components on the same project page (e.g. a pinned
+// - deliberately. Other components on the same project page (e.g. a pinned
 // scroll-reveal text block) insert a pin spacer into the DOM that isn't
 // always there yet when a ScrollTrigger below it gets measured, leaving it
-// permanently short by that spacer's height — even an explicit, later
+// permanently short by that spacer's height - even an explicit, later
 // ScrollTrigger.refresh() doesn't correct it. An IntersectionObserver reads
 // the browser's live layout directly instead of caching an absolute pixel
 // position, so it can't go stale this way.

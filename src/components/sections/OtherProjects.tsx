@@ -13,7 +13,7 @@ export default function OtherProjects() {
 
   // Below 768px the viewport is too narrow for a pinned fullscreen panel
   // per item to read well, and `pin: true` fights the page's natural
-  // vertical scroll on touch — falls back to a plain horizontally
+  // vertical scroll on touch - falls back to a plain horizontally
   // scrollable strip instead (see JSX below).
   const [isMobile, setIsMobile] = useState(false);
 
@@ -32,13 +32,13 @@ export default function OtherProjects() {
     // on mount this effect and the state-setting effect above both run off
     // the same (still-`false`) initial render, so the state alone would let
     // this fire once on phones with `pin: true` before the next render
-    // corrects it — leaving a stray pin-spacer sized for the desktop
+    // corrects it - leaving a stray pin-spacer sized for the desktop
     // 100dvh layout sitting as dead space above the footer.
     const mobile = window.matchMedia("(max-width: 768px)").matches;
     if (!pinWrap || !track || mobile) return;
 
     const ctx = gsap.context(() => {
-      // Each panel is a full viewport wide — vertical scroll drives the
+      // Each panel is a full viewport wide - vertical scroll drives the
       // horizontal walk through them, then releases straight into the footer.
       const distance = () => (otherProjects.length - 1) * window.innerWidth;
 

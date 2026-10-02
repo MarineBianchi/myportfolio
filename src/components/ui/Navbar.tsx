@@ -13,7 +13,7 @@ const navLinks = [
 
 export default function Navbar() {
   const navRef = useRef<HTMLElement>(null);
-  // Hero has its own top/bottom bars — this header only takes over once
+  // Hero has its own top/bottom bars - this header only takes over once
   // the hero has fully scrolled past, so the two never overlap.
   const [visible, setVisible] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -68,7 +68,7 @@ export default function Navbar() {
           padding: "1.85rem clamp(2.5rem, 5vw, 5rem)",
           background: "transparent",
           // Transparent header sitting over sections of any color (flat or
-          // photographic, like the Works backdrop) — difference blend mode
+          // photographic, like the Works backdrop) - difference blend mode
           // against fixed white text self-inverts to stay legible on whatever
           // is behind it, instead of tracking each section's theme by hand.
           color: "#ffffff",
@@ -137,7 +137,7 @@ export default function Navbar() {
           ))}
         </nav>
 
-        {/* Hidden above the mobile breakpoint (see globals.css) — the
+        {/* Hidden above the mobile breakpoint (see globals.css) - the
             header is a single unwrapped row and genuinely has no room for
             logo + tagline + 4 links below ~768px. */}
         <button
@@ -190,7 +190,7 @@ export default function Navbar() {
         </button>
       </header>
 
-      {/* Mobile menu overlay — solid background instead of the header's
+      {/* Mobile menu overlay - solid background instead of the header's
           difference-blend trick, so the links stay legible regardless of
           what's scrolled underneath. */}
       <div

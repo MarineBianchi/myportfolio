@@ -9,7 +9,7 @@ const CIRCLE_SIZE = 44;
 const ICON_W = 15;
 const ICON_H = 32;
 // The glyph's hotspot (the dot at the bottom of the mark) sits at ~89% of
-// its own height — this keeps it pinned under the pointer at any icon size.
+// its own height - this keeps it pinned under the pointer at any icon size.
 const DOT_Y = Math.round((CIRCLE_SIZE - ICON_H) / 2 + 0.891 * ICON_H);
 const ACTIVE_SELECTOR = "a, button, [data-cursor='view'], [role='button'], [data-cursor-label]";
 // Sentinel value for "show the logo instead of a text label" on hover.
@@ -18,7 +18,7 @@ const LOGO_LABEL = "logo";
 // The cursor lives outside every section's DOM subtree (mounted once in the
 // root layout), so it can't pick up a section's local `--foreground` CSS
 // variable override. It looks for the nearest `data-cursor-theme` ancestor
-// instead and resolves literal colors itself — this is what keeps the logo
+// instead and resolves literal colors itself - this is what keeps the logo
 // legible (light glyph on dark sections, dark glyph on light ones) everywhere.
 const THEME_COLORS = {
   light: { fg: "#111111", bg: "#f8f7f4" },
@@ -61,7 +61,7 @@ export default function CustomCursor() {
   }, [pathname]);
 
   // Recenter the pill on the pointer whenever its content (icon vs. text,
-  // or the text itself) changes size — the idle circle keeps its fixed,
+  // or the text itself) changes size - the idle circle keeps its fixed,
   // hotspot-anchored offset instead.
   useLayoutEffect(() => {
     if (label) {
@@ -90,7 +90,7 @@ export default function CustomCursor() {
       });
     };
 
-    // Delegated hover detection — works for content added after mount
+    // Delegated hover detection - works for content added after mount
     // (e.g. client-navigated routes), unlike binding listeners per-element once.
     const onMouseOver = (e: MouseEvent) => {
       const el = e.target as HTMLElement;

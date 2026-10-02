@@ -56,8 +56,8 @@ const capabilities: CapRow[] = [
   },
 ];
 
-// Every image of every project — full galleries, not just a "02"/"03"
-// sample — one project after another, then the whole sequence loops. Not
+// Every image of every project - full galleries, not just a "02"/"03"
+// sample - one project after another, then the whole sequence loops. Not
 // capped at 4: the stack keeps cycling through it for as long as a row
 // stays hovered, so it never feels like it runs out or stalls.
 const cycleImages: string[] = [
@@ -69,7 +69,7 @@ const STACK_W = 220;
 const STACK_H = 160;
 const START_DELAY_MS = 140; // the row stays empty this long before the stack appears
 // Each of the 5 layers swaps its own image on this period, but their swaps
-// are staggered by a fifth of it — so at any instant exactly one layer is
+// are staggered by a fifth of it - so at any instant exactly one layer is
 // mid-crossfade while the other four sit fully visible. Nothing ever
 // freezes-then-jumps as a synced batch; the stack is always quietly moving.
 const CYCLE_INTERVAL_MS = 950;
@@ -84,7 +84,7 @@ export default function Capabilities() {
   const rightRef = useRef<HTMLImageElement>(null);
 
   // The stack only exists in the DOM while the entry delay has fully
-  // elapsed — nothing to hide/fade-leak because there's nothing rendered
+  // elapsed - nothing to hide/fade-leak because there's nothing rendered
   // in between. It's keyed off the whole section, not individual rows, so
   // moving the cursor around inside the section never stops the cycle.
   const [isActive, setIsActive] = useState(false);
@@ -96,7 +96,7 @@ export default function Capabilities() {
   const cursorsRef = useRef<number[]>([0, 1, 2, 3, 4]);
   const layerTimersRef = useRef<Array<ReturnType<typeof setInterval> | ReturnType<typeof setTimeout>>>([]);
 
-  // Scroll reveal for the rows — unrelated to the hover preview below
+  // Scroll reveal for the rows - unrelated to the hover preview below
   useEffect(() => {
     const ctx = gsap.context(() => {
       capabilities.forEach((_, i) => {
@@ -120,7 +120,7 @@ export default function Capabilities() {
   }, []);
 
   // Drives the stack: once mounted (the entry delay has elapsed) it builds
-  // up one layer at a time — bottom → top → left+right → front — then each
+  // up one layer at a time - bottom → top → left+right → front - then each
   // of the 5 layers starts its own continuous, staggered crossfade loop that
   // keeps running for as long as the section stays hovered, looping through
   // the shared image sequence with no synchronized pause.
@@ -183,7 +183,7 @@ export default function Capabilities() {
   }, [isActive]);
 
   // Attached to the whole section, not individual rows, so crossing from
-  // one row to another never fires this again — only entering/leaving the
+  // one row to another never fires this again - only entering/leaving the
   // section itself does.
   const handleEnter = (e: React.MouseEvent<HTMLElement>) => {
     if (pendingRef.current) clearTimeout(pendingRef.current);
@@ -307,7 +307,7 @@ export default function Capabilities() {
         </div>
       ))}
 
-      {/* ── Hover preview stack — only exists in the DOM once the delay has
+      {/* ── Hover preview stack - only exists in the DOM once the delay has
            elapsed for the hovered row, follows the cursor while it's active ── */}
       {isActive && (
         <div

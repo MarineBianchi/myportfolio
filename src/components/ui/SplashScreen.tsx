@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 
 // Module-level, so it survives client-side navigation but resets on a
-// full page load — the splash only plays when the site is first opened.
+// full page load - the splash only plays when the site is first opened.
 let hasPlayed = false;
 
 export default function SplashScreen() {
@@ -23,7 +23,7 @@ export default function SplashScreen() {
     // Le "n" occupe ~50.7% en x et ~33% en y dans le viewBox du logo
     // → transformOrigin centré sur le "n" pour que le scale parte de lui
     const N_ORIGIN = "50.7% 33%";
-    // Scale large — le "n" doit déborder de l'écran dans toutes les directions
+    // Scale large - le "n" doit déborder de l'écran dans toutes les directions
     const N_SCALE  = Math.max(W, H) / 18;
 
     const tl = gsap.timeline({
@@ -35,7 +35,7 @@ export default function SplashScreen() {
     });
 
     tl
-    // ① n + dot apparaissent en premier — la porte se révèle
+    // ① n + dot apparaissent en premier - la porte se révèle
     .fromTo(
       ["#logo-n", "#logo-dot"],
       { opacity: 0, scale: 0.75, transformOrigin: "center center" },
@@ -55,12 +55,12 @@ export default function SplashScreen() {
     // ④ Pause courte
     .to({}, { duration: 0.35 })
 
-    // ⑤ Les autres lettres + tagline disparaissent — seul le "n" reste
+    // ⑤ Les autres lettres + tagline disparaissent - seul le "n" reste
     .to(["#logo-b", "#logo-i1", "#logo-a", "#logo-c", "#logo-h", "#logo-i2", taglineRef.current], {
       opacity: 0, duration: 0.25, ease: "power2.in",
     })
 
-    // ⑥ Le "n" grossit vite — l'overlay reste OPAQUE (pas de site visible autour)
+    // ⑥ Le "n" grossit vite - l'overlay reste OPAQUE (pas de site visible autour)
     .to("#splash-logo", {
       scale: N_SCALE,
       transformOrigin: N_ORIGIN,
@@ -68,7 +68,7 @@ export default function SplashScreen() {
       ease: "power3.in",
     })
 
-    // ⑦ Tout disparaît d'un coup — le site se révèle
+    // ⑦ Tout disparaît d'un coup - le site se révèle
     .to([overlayRef.current, "#splash-logo"], {
       opacity: 0, duration: 0.2, ease: "none",
     });
@@ -88,7 +88,7 @@ export default function SplashScreen() {
       {/* Overlay fond */}
       <div ref={overlayRef} style={{ position: "absolute", inset: 0, background: "var(--background)" }} />
 
-      {/* Logo + tagline — centré, au-dessus de l'overlay */}
+      {/* Logo + tagline - centré, au-dessus de l'overlay */}
       <div
         style={{
           position: "absolute",
@@ -129,7 +129,7 @@ export default function SplashScreen() {
           opacity="0"
           d="M24.79,26.85c-1.15-1.15-1.73-2.64-1.73-4.45,0-1.05,.26-2,.77-2.86,.51-.86,1.23-1.54,2.15-2.03,.92-.5,1.97-.75,3.15-.75h2.88v-2.11c0-.87-.25-1.57-.75-2.11-.5-.54-1.17-.81-2.02-.81-.79,0-1.41,.24-1.86,.71-.45,.47-.7,1.12-.75,1.94-.03,.18-.08,.3-.15,.36-.08,.06-.21,.1-.38,.1h-2.23c-.15,0-.28-.05-.36-.15-.09-.1-.13-.23-.13-.38,.13-1.69,.72-3.06,1.79-4.13,1.06-1.06,2.44-1.59,4.13-1.59,1.79,0,3.24,.58,4.34,1.75,1.1,1.17,1.65,2.66,1.65,4.47v7.72c0,1.79-.54,3.25-1.63,4.38-1.09,1.13-2.54,1.69-4.36,1.69s-3.34-.58-4.49-1.73Zm6.49-2.21c.49-.52,.73-1.23,.73-2.13v-2.8h-2.76c-.87,0-1.57,.26-2.09,.77-.52,.51-.79,1.15-.79,1.92,0,.92,.26,1.66,.77,2.21,.51,.55,1.22,.83,2.11,.83s1.55-.26,2.03-.79Z"
         />
-        {/* n arch — already black, anchor of the logo */}
+        {/* n arch - already black, anchor of the logo */}
         <path
           id="logo-n"
           fill="#111111"
@@ -157,7 +157,7 @@ export default function SplashScreen() {
           opacity="0"
           d="M84.38,3.4c-.37-.37-.56-.84-.56-1.4s.19-1.07,.56-1.44,.84-.56,1.4-.56,1.04,.19,1.42,.58c.38,.38,.58,.86,.58,1.42,0,.51-.2,.97-.6,1.36-.4,.4-.86,.6-1.4,.6s-1.03-.19-1.4-.56Zm-.25,29.29V7.08c0-.47,.18-.7,.54-.7h2.23c.36,0,.54,.24,.54,.7v25.61c0,.51-.18,.76-.54,.76h-2.23c-.36,0-.54-.25-.54-.76Z"
         />
-        {/* n dot — already black */}
+        {/* n dot - already black */}
         <path
           id="logo-dot"
           fill="#111111"
@@ -166,7 +166,7 @@ export default function SplashScreen() {
         />
         </svg>
 
-        {/* Tagline — apparaît après le logo */}
+        {/* Tagline - apparaît après le logo */}
         <p
           ref={taglineRef}
           style={{

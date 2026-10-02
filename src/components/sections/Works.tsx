@@ -12,7 +12,7 @@ const PHOTO_A = "/img/Apropos1.JPG";
 const PHOTO_B = "/img/Apropos3.jpg";
 const BACKDROP = "/img/fond3.JPG";
 
-// Sticky, not pinned — a GSAP `pin: true` inserts its pin-spacer on a
+// Sticky, not pinned - a GSAP `pin: true` inserts its pin-spacer on a
 // deferred frame, not synchronously, so anything else measured in the same
 // pass (e.g. a section placed right after it) gets measured short by that
 // spacer's height. `position: sticky` needs no spacer and no such
@@ -31,7 +31,7 @@ export default function PhotoShowcase() {
   // CSS media query: a `.work-frame { height: auto !important; aspect-ratio:
   // 3/2 !important; }` rule was silently dropped by the build's CSS
   // minifier (Lightning CSS) while an identical sibling rule in the same
-  // block survived — not worth chasing further when the inline style is
+  // block survived - not worth chasing further when the inline style is
   // just as reliable and matches the pattern already used for reducedMotion.
   const [isMobile, setIsMobile] = useState(false);
 
@@ -56,8 +56,8 @@ export default function PhotoShowcase() {
       if (reducedMotion) return;
 
       gsap.set(a.current, { scale: 1.8 });
-      // B appears already at the "whole photo" scale — matching where the
-      // frame is at the cut — so from the moment it's visible its scale
+      // B appears already at the "whole photo" scale - matching where the
+      // frame is at the cut - so from the moment it's visible its scale
       // only ever climbs toward the close-up, never dips first.
       gsap.set(b.current, { autoAlpha: 0, scale: 1.0 });
       gsap.set(bg.current, { scale: 1.5 });
@@ -71,17 +71,17 @@ export default function PhotoShowcase() {
       tl
         // 0 → 0.10 : pause, A en plein écran
         // 0.10 → 0.30 : le cadre rétrécit en un seul mouvement jusqu'à sa
-        // taille minimale — toute la réduction se fait pendant que A est
+        // taille minimale - toute la réduction se fait pendant que A est
         // encore visible, pas après l'arrivée de B.
         .fromTo(frame.current, { "--s": 1 }, { "--s": 0.6, duration: 0.2, ...R }, 0.1)
         .fromTo(a.current, { scale: 1.8 }, { scale: 1.0, duration: 0.2, ...R }, 0.1)
         .fromTo(bg.current, { scale: 1.5 }, { scale: 1.0, duration: 0.2, ...R }, 0.1)
-        // 0.30 : coupe nette A → B, cadre déjà à sa taille minimale — aucun
+        // 0.30 : coupe nette A → B, cadre déjà à sa taille minimale - aucun
         // mouvement du cadre à cet instant.
         .set(a.current, { autoAlpha: 0 }, 0.3)
         .set(b.current, { autoAlpha: 1 }, 0.3)
         // 0.30 → 0.42 : pause, petite carte, photo B entière visible
-        // 0.42 → 0.68 : le cadre regrandit jusqu'au plein écran — B ne fait
+        // 0.42 → 0.68 : le cadre regrandit jusqu'au plein écran - B ne fait
         // que zoomer à partir d'ici, jamais de recul.
         .fromTo(frame.current, { "--s": 0.6 }, { "--s": 1, duration: 0.26, ...R }, 0.42)
         .fromTo(b.current, { scale: 1.0 }, { scale: 1.8, duration: 0.26, ...R }, 0.42)
@@ -104,7 +104,7 @@ export default function PhotoShowcase() {
       ref={wrap}
       id="works"
       className="relative"
-      // Every other themed section on the page sits at z-index 20 — kept
+      // Every other themed section on the page sits at z-index 20 - kept
       // here too so this section reliably wins any stacking tie against the
       // pinned Statement section right above it.
       style={{ height: "500vh", zIndex: 20 }}
@@ -120,7 +120,7 @@ export default function PhotoShowcase() {
             {
               ["--s" as string]: 1,
               width: "calc(var(--s) * 100vw)",
-              // Both photos are ~3:2 landscape — on a portrait phone,
+              // Both photos are ~3:2 landscape - on a portrait phone,
               // `--s * 100dvh` is far taller than that ratio needs, leaving
               // a big empty letterboxed band above/below the (object-contain)
               // image inside the frame. Mobile instead derives height from

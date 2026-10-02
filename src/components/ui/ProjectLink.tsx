@@ -32,7 +32,7 @@ function waitForDestination(): Promise<void> {
 
 // Clicking a project link grows the (already black, already under the
 // pointer) custom cursor circle until it swallows the whole screen, swaps
-// the route underneath it, then simply dissolves — it opens onto the new
+// the route underneath it, then simply dissolves - it opens onto the new
 // page and stays open, it never closes back down.
 export default function ProjectLink({ children, href, onClick, ...rest }: ProjectLinkProps) {
   const router = useRouter();
@@ -40,12 +40,12 @@ export default function ProjectLink({ children, href, onClick, ...rest }: Projec
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     onClick?.(e);
     if (e.defaultPrevented) return;
-    // Only hijack plain left-clicks — let cmd/ctrl/middle-click open in a new tab normally
+    // Only hijack plain left-clicks - let cmd/ctrl/middle-click open in a new tab normally
     if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
 
     const cursor = document.getElementById("site-cursor");
     // #site-cursor is always mounted, so checking for its existence never
-    // actually detects touch — it has to be a real capability check. On
+    // actually detects touch - it has to be a real capability check. On
     // touch the element is hidden via CSS and never positioned, so using
     // its (stale, 0,0) rect would make the transition expand from the
     // wrong corner instead of falling back to normal navigation.

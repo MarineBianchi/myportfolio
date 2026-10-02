@@ -1,7 +1,8 @@
 import { ImageResponse } from "next/og";
 import { allProjects, getProjectBySlug } from "@/data/projects";
 
-export const alt = "Marine Bianchi — projet";
+export const dynamic = "force-static";
+export const alt = "Marine Bianchi - projet";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 

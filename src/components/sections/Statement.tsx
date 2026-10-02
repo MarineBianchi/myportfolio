@@ -67,7 +67,7 @@ const words: Word[] = [
 ];
 
 // Words start dim and fade in solid one by one as the section scrolls
-// through the viewport — pinned while it plays, same mechanic as the
+// through the viewport - pinned while it plays, same mechanic as the
 // project pages' ScrollColorText.
 export default function Statement() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -112,7 +112,7 @@ export default function Statement() {
           alignItems: "center",
         }}
       >
-        {/* Giant "n" watermark — sized off the viewport, not the text block,
+        {/* Giant "n" watermark - sized off the viewport, not the text block,
           so it stays put and fully visible no matter how tall the copy is. */}
         <svg
           aria-hidden="true"

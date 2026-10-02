@@ -27,7 +27,7 @@ export const PALETTE: Record<
 };
 
 // Wraps a section and smoothly crossfades the page background from the
-// previous section's theme color to its own as it scrolls into view —
+// previous section's theme color to its own as it scrolls into view -
 // the color finishes resolving right as the section fills the viewport,
 // so the seam with the section above/below is invisible.
 export default function ThemeSection({

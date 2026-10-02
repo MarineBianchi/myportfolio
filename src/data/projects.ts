@@ -13,16 +13,16 @@ export type Project = {
   // brand texture when absent; `blurBackdrop` softens it into ambiance.
   backdrop?: string;
   blurBackdrop?: boolean;
-  // Explicit gallery order — set this when a project's video doesn't belong
+  // Explicit gallery order - set this when a project's video doesn't belong
   // first (e.g. it sits between two photos in the numbered files). When
   // absent, the gallery falls back to video-first, then `image` + `images`.
   media?: MediaItem[];
   tint: string;
   tagline: string;
-  // Exhaustive list of what was made — shown under the title on the
+  // Exhaustive list of what was made - shown under the title on the
   // project page. Descriptive sentences belong in `description` only.
   deliverables?: string[];
-  // Technologies used — shown on its own line under the deliverables.
+  // Technologies used - shown on its own line under the deliverables.
   stack?: string[];
   description: string;
   // Document shown at the very bottom of the project page (e.g. a
@@ -37,7 +37,7 @@ export type GalleryItem = {
   image: string;
 };
 
-// Selected work — sticky video panels on the home page (Projects.tsx)
+// Selected work - sticky video panels on the home page (Projects.tsx)
 export const featuredProjects: Project[] = [
   {
     id: "01",
@@ -116,7 +116,7 @@ export const featuredProjects: Project[] = [
   },
 ];
 
-// Tous les projets — mosaïque asymétrique (GridProjects.tsx), ordre fixé
+// Tous les projets - mosaïque asymétrique (GridProjects.tsx), ordre fixé
 export const gridRows: Project[] = [
   {
     id: "01",
@@ -320,7 +320,7 @@ export const gridRows: Project[] = [
   },
 ];
 
-// Autres projets — galerie horizontale non-cliquable (OtherProjects.tsx)
+// Autres projets - galerie horizontale non-cliquable (OtherProjects.tsx)
 export const otherProjects: GalleryItem[] = [
    {
     id: "01",
@@ -354,7 +354,7 @@ export const otherProjects: GalleryItem[] = [
 
 ];
 
-// All routable projects, in display order — used for the project detail route
+// All routable projects, in display order - used for the project detail route
 export const allProjects: Project[] = [...featuredProjects, ...gridRows];
 
 export function getProjectBySlug(slug: string): Project | undefined {

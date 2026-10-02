@@ -40,7 +40,7 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
     // A pinned ScrollTrigger (e.g. Statement's text reveal) defers its own
     // pin-spacer's DOM insertion to the next frame rather than doing it
     // synchronously inside ScrollTrigger.create(). Any trigger created right
-    // below it in the same pass — e.g. Works' entrance/pin — gets measured
+    // below it in the same pass - e.g. Works' entrance/pin - gets measured
     // against a page that's still short by that spacer's height, and a
     // same-tick refresh() doesn't fix it because the spacer still isn't
     // there yet. One refresh here, after the whole tree has committed and

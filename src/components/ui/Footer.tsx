@@ -33,7 +33,7 @@ export default function Footer() {
     return () => { tween.kill(); };
   }, []);
 
-  // One copy of the text — duplicated in JSX for the seamless loop
+  // One copy of the text - duplicated in JSX for the seamless loop
   const NAME_CHUNK = "MARINE BIANCHI  ·  ";
   const repeated = NAME_CHUNK.repeat(6);
 
@@ -61,7 +61,7 @@ export default function Footer() {
           borderBottom: "1px solid rgba(255,255,255,0.1)",
         }}
       >
-        {/* Left — nav */}
+        {/* Left - nav */}
         <nav style={{ display: "flex", flexDirection: "column", gap: "1.4rem" }}>
           {NAV_LINKS.map((link) => (
             <button
@@ -86,7 +86,7 @@ export default function Footer() {
           ))}
         </nav>
 
-        {/* Right — email + socials */}
+        {/* Right - email + socials */}
         <div className="footer-contact-col" style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "2.5rem" }}>
           <a
             href="mailto:hello.mb.pro@gmail.com"
