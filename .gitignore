@@ -36,3 +36,13 @@ next-env.d.ts
 # Videos (large files - add locally)
 public/img/videos/*.mp4
 public/img/videos/*.mov
+
+# Stray WordPress FTP backup, not part of the portfolio
+public/svgOld/
+
+# IDE
+.idea/
+*.iml
+
+# Claude Code local permissions (machine-specific, not shared config)
+.claude/settings.local.json

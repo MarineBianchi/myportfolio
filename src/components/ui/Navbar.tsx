@@ -1,92 +1,114 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { gsap } from "gsap";
+import { useEffect, useRef, useState } from "react";
+import { useRouter, usePathname } from "next/navigation";
+import { scrollToSection, scrollToHome } from "@/lib/scrollToSection";
 
 const navLinks = [
-  { label: "Portfolio", href: "#projects" },
-  { label: "Services", href: "#skills" },
+  { label: "Portfolio", href: "#grid-projects" },
+  { label: "À propos", href: "#about" },
+  { label: "Services", href: "#capabilities" },
   { label: "Contact", href: "#contact" },
 ];
 
 export default function Navbar() {
   const navRef = useRef<HTMLElement>(null);
+  // Hero has its own top/bottom bars — this header only takes over once
+  // the hero has fully scrolled past, so the two never overlap.
+  const [visible, setVisible] = useState(false);
+  const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
-    const nav = navRef.current;
-    if (!nav) return;
-
-    gsap.set(nav, { y: -72, opacity: 0 });
-
-    let prevScrollY = 0;
-    let visible = false;
-
     const handleScroll = () => {
-      const scrollY = window.scrollY;
-      const heroH = window.innerHeight;
-
-      if (scrollY > heroH * 0.85) {
-        if (scrollY < prevScrollY && !visible) {
-          gsap.to(nav, { y: 0, opacity: 1, duration: 0.4, ease: "power2.out" });
-          visible = true;
-        } else if (scrollY > prevScrollY && visible) {
-          gsap.to(nav, { y: -72, opacity: 0, duration: 0.3, ease: "power2.in" });
-          visible = false;
-        }
-      } else if (visible) {
-        gsap.to(nav, { y: -72, opacity: 0, duration: 0.3 });
-        visible = false;
-      }
-
-      prevScrollY = scrollY;
+      const hero = document.getElementById("hero");
+      const heroBottom = hero ? hero.getBoundingClientRect().bottom : 0;
+      setVisible(heroBottom <= 2);
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener("resize", handleScroll);
+    handleScroll();
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
+    };
   }, []);
-
-  const scrollTo = (href: string) => {
-    const el = document.querySelector(href);
-    if (el) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const lenis = (window as unknown as { lenis?: any }).lenis;
-      if (lenis) lenis.scrollTo(el);
-      else el.scrollIntoView({ behavior: "smooth" });
-    }
-  };
 
   return (
     <header
       ref={navRef}
-      className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 md:px-14 py-4 backdrop-blur-md"
       style={{
-        background: "rgba(248,247,244,0.92)",
-        borderBottom: "1px solid var(--border)",
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 50,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        padding: "1.85rem clamp(2.5rem, 5vw, 5rem)",
+        background: "transparent",
+        // Transparent header sitting over sections of any color (flat or
+        // photographic, like the Works backdrop) — difference blend mode
+        // against fixed white text self-inverts to stay legible on whatever
+        // is behind it, instead of tracking each section's theme by hand.
+        color: "#ffffff",
+        mixBlendMode: "difference",
+        opacity: visible ? 1 : 0,
+        pointerEvents: visible ? "auto" : "none",
+        transform: visible ? "translateY(0)" : "translateY(-8px)",
+        transition: "opacity 0.4s ease, transform 0.4s ease",
       }}
     >
       <a
-        href="#"
-        className="font-bold tracking-tight text-sm"
-        style={{ color: "var(--foreground)" }}
+        href="/"
         onClick={(e) => {
           e.preventDefault();
-          window.scrollTo({ top: 0, behavior: "smooth" });
+          scrollToHome(router, pathname);
+        }}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "0.85rem",
+          textDecoration: "none",
+          color: "inherit",
         }}
       >
-        <img
-          src="/videos/logo.svg"
-          alt="Marine Bianchi"
-          style={{ height: 18, display: "block", filter: "brightness(0)" }}
+        <span style={{ fontWeight: 600, fontSize: "0.95rem", letterSpacing: "-0.01em" }}>
+          Marine Bianchi
+        </span>
+        <span
+          aria-hidden="true"
+          style={{
+            width: 4,
+            height: 4,
+            borderRadius: "50%",
+            background: "currentColor",
+            opacity: 0.5,
+            flexShrink: 0,
+          }}
         />
+        <span style={{ fontSize: "0.8rem", opacity: 0.65 }}>
+          Design &amp; développement web
+        </span>
       </a>
 
-      <nav className="flex items-center gap-8">
+      <nav style={{ display: "flex", alignItems: "center", gap: "2.5rem" }}>
         {navLinks.map((link) => (
           <button
             key={link.href}
-            onClick={() => scrollTo(link.href)}
-            className="text-sm font-medium relative group"
-            style={{ color: "var(--foreground)" }}
+            onClick={() => scrollToSection(router, link.href)}
+            className="relative group"
+            style={{
+              fontSize: "0.8rem",
+              fontWeight: 500,
+              color: "inherit",
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              padding: 0,
+            }}
           >
             {link.label}
             <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-current transition-all duration-300 group-hover:w-full" />

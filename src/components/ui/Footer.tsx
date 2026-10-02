@@ -1,31 +1,25 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { gsap } from "gsap";
+import { scrollToSection } from "@/lib/scrollToSection";
 
-const NAV_LINKS = ["Portfolio", "Services", "Contact"];
-const SOCIALS = ["LinkedIn", "Behance", "Instagram"];
+const NAV_LINKS = [
+  { label: "Portfolio", href: "#grid-projects" },
+  { label: "À propos", href: "#about" },
+  { label: "Services", href: "#capabilities" },
+  { label: "Contact", href: "#contact" },
+];
+const SOCIALS = [
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/mbian/" },
+  { label: "Instagram", href: "https://www.instagram.com/its.m.work/" },
+  { label: "GitHub", href: "https://github.com/MarineBianchi" },
+];
 
 export default function Footer() {
   const marqueeRef = useRef<HTMLDivElement>(null);
-  const [time, setTime] = useState("");
-
-  // ── Live clock ───────────────────────────────────────────────
-  useEffect(() => {
-    const tick = () => {
-      const now = new Date();
-      setTime(
-        now.toLocaleTimeString("fr-FR", {
-          hour: "2-digit",
-          minute: "2-digit",
-          timeZone: "Europe/Paris",
-        })
-      );
-    };
-    tick();
-    const id = setInterval(tick, 1000);
-    return () => clearInterval(id);
-  }, []);
+  const router = useRouter();
 
   // ── Infinite marquee ─────────────────────────────────────────
   useEffect(() => {
@@ -40,13 +34,17 @@ export default function Footer() {
   }, []);
 
   // One copy of the text — duplicated in JSX for the seamless loop
-  const NAME_CHUNK = "MARINE BIANCHI\u00A0\u00A0·\u00A0\u00A0";
+  const NAME_CHUNK = "MARINE BIANCHI  ·  ";
   const repeated = NAME_CHUNK.repeat(6);
 
   return (
     <footer
+      id="contact"
+      data-cursor-theme="dark"
       style={{
-        background: "#111",
+        backgroundImage: "linear-gradient(rgba(10,10,10,0.12), rgba(10,10,10,0.12)), url(/img/fond2.JPG)",
+        backgroundSize: "cover",
+        backgroundPosition: "center top",
         overflow: "hidden",
         position: "relative",
         zIndex: 30,
@@ -65,9 +63,9 @@ export default function Footer() {
         {/* Left — nav */}
         <nav style={{ display: "flex", flexDirection: "column", gap: "1.4rem" }}>
           {NAV_LINKS.map((link) => (
-            <a
-              key={link}
-              href={`#${link.toLowerCase()}`}
+            <button
+              key={link.href}
+              onClick={() => scrollToSection(router, link.href)}
               style={{
                 fontSize: "0.75rem",
                 textTransform: "uppercase",
@@ -75,17 +73,22 @@ export default function Footer() {
                 color: "#f8f7f4",
                 textDecoration: "none",
                 fontWeight: 500,
+                background: "none",
+                border: "none",
+                padding: 0,
+                textAlign: "left",
+                cursor: "pointer",
               }}
             >
-              {link}
-            </a>
+              {link.label}
+            </button>
           ))}
         </nav>
 
         {/* Right — email + socials */}
         <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "2.5rem" }}>
           <a
-            href="mailto:hello@marinebianchi.fr"
+            href="mailto:hello.mb.pro@gmail.com"
             style={{
               fontSize: "clamp(1.4rem, 3vw, 3rem)",
               fontWeight: 400,
@@ -96,14 +99,16 @@ export default function Footer() {
               textAlign: "right",
             }}
           >
-            hello@marinebianchi.fr
+            hello.mb.pro@gmail.com
           </a>
 
           <div style={{ display: "flex", gap: "clamp(1.5rem, 4vw, 4rem)", alignItems: "center" }}>
             {SOCIALS.map((s) => (
               <a
-                key={s}
-                href="#"
+                key={s.label}
+                href={s.href}
+                target="_blank"
+                rel="noopener noreferrer"
                 style={{
                   fontSize: "0.72rem",
                   textTransform: "uppercase",
@@ -118,39 +123,11 @@ export default function Footer() {
                   gap: "0.4rem",
                 }}
               >
-                {s}&nbsp;↗
+                {s.label}&nbsp;↗
               </a>
             ))}
           </div>
         </div>
-      </div>
-
-      {/* ── Bracket links ───────────────────────────────────────── */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          padding: "2.2rem clamp(2.5rem, 5vw, 5rem)",
-          borderBottom: "1px solid rgba(255,255,255,0.1)",
-        }}
-      >
-        {SOCIALS.map((s) => (
-          <a
-            key={s}
-            href="#"
-            style={{
-              fontSize: "0.72rem",
-              textTransform: "uppercase",
-              letterSpacing: "0.22em",
-              color: "#f8f7f4",
-              textDecoration: "none",
-              fontWeight: 500,
-            }}
-          >
-            [ {s} ]
-          </a>
-        ))}
       </div>
 
       {/* ── Name marquee ────────────────────────────────────────── */}
@@ -184,22 +161,22 @@ export default function Footer() {
         style={{
           display: "flex",
           alignItems: "center",
-          justifyContent: "space-between",
+          justifyContent: "flex-end",
           padding: "1.8rem clamp(2.5rem, 5vw, 5rem)",
         }}
       >
-        {/* ① Dot signature */}
         <span style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
-          <span style={{ width: 6, height: 6, borderRadius: "50%", background: "rgba(255,255,255,0.35)", display: "inline-block" }} />
-          <span style={{ fontSize: "0.7rem", textTransform: "uppercase", letterSpacing: "0.18em", color: "rgba(255,255,255,0.35)", fontWeight: 500 }}>
-            Paris, France (GMT+1)&nbsp;&nbsp;{time}
-          </span>
-        </span>
-
-        <span style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
-          <span style={{ width: 6, height: 6, borderRadius: "50%", background: "rgba(255,255,255,0.35)", display: "inline-block" }} />
-          <span style={{ fontSize: "0.7rem", textTransform: "uppercase", letterSpacing: "0.18em", color: "rgba(255,255,255,0.35)", fontWeight: 500 }}>
-            La porte est toujours ouverte.
+          <span
+            style={{
+              width: 6,
+              height: 6,
+              borderRadius: "50%",
+              background: "#22c55e",
+              display: "inline-block",
+            }}
+          />
+          <span style={{ fontSize: "0.7rem", textTransform: "uppercase", letterSpacing: "0.18em", color: "rgba(255,255,255,0.6)", fontWeight: 500 }}>
+            Available for work
           </span>
         </span>
       </div>

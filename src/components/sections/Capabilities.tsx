@@ -1,73 +1,102 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { allProjects, otherProjects } from "@/data/projects";
 
 gsap.registerPlugin(ScrollTrigger);
 
-type CapRow =
-  | { id: string; title: string; type: "service"; description: string }
-  | { id: string; title: string; type: "knowledge"; tools: string[] };
+type CapRow = {
+  id: string;
+  title: string;
+  tools: string[];
+};
 
 const capabilities: CapRow[] = [
   {
     id: "01",
-    type: "service",
-    title: "Direction Artistique",
-    description:
-      "Je crée des univers visuels qui racontent votre histoire, cassent les codes, et font de chaque détail un atout.",
+    title: "Design & Branding",
+    tools: ["Suite Adobe", "Figma (maquettes webdesign)"],
   },
   {
     id: "02",
-    type: "service",
-    title: "UI/UX Design",
-    description:
-      "Je conçois des interfaces qui ne fonctionnent pas seulement — elles captivent, guident et transforment la façon dont les gens vivent votre marque.",
+    title: "Front-end",
+    tools: ["Angular", "React", "JavaScript", "GSAP"],
   },
   {
     id: "03",
-    type: "service",
-    title: "Développement Web",
-    description:
-      "Je développe des expériences digitales rapides, fluides et mémorables — du code qui s'exprime et performe.",
+    title: "Back-end",
+    tools: ["Spring Boot", "Node.js"],
   },
   {
     id: "04",
-    type: "service",
-    title: "Brand Identity",
-    description:
-      "Je crée des identités qui ne représentent pas seulement — elles résonnent, inspirent et laissent une empreinte durable.",
+    title: "Base de données",
+    tools: ["PostgreSQL", "MongoDB", "AS400"],
   },
   {
     id: "05",
-    type: "knowledge",
-    title: "Design & UI Animation",
-    tools: ["Figma", "Google Gemini", "ChatGPT", "Photoshop"],
+    title: "CMS & No-code",
+    tools: ["WordPress", "Webflow"],
   },
   {
     id: "06",
-    type: "knowledge",
-    title: "Development Technologies",
-    tools: ["HTML", "CSS", "Sass", "JavaScript", "Python", "Claude.ai", "Framer"],
+    title: "Workflow",
+    tools: ["Git", "GitHub"],
   },
   {
     id: "07",
-    type: "knowledge",
-    title: "Project Management",
-    tools: ["Trello", "Agile", "Jira", "Notion", "ClickUp"],
+    title: "Outils",
+    tools: ["Jenkins", "N8N", "Keycloak", "Graylog", "Docker", "Notion"],
   },
   {
     id: "08",
-    type: "knowledge",
-    title: "Collaboration & Cooperation",
-    tools: ["Slack", "Zoom", "Email", "Google Meet", "Skype"],
+    title: "IA",
+    tools: ["Claude Code"],
   },
 ];
 
+// Every image of every project — full galleries, not just a "02"/"03"
+// sample — one project after another, then the whole sequence loops. Not
+// capped at 4: the stack keeps cycling through it for as long as a row
+// stays hovered, so it never feels like it runs out or stalls.
+const cycleImages: string[] = [
+  ...allProjects.flatMap((p) => [p.image, ...(p.images ?? [])]),
+  ...otherProjects.map((p) => p.image),
+].filter((src): src is string => Boolean(src));
+
+const STACK_W = 220;
+const STACK_H = 160;
+const START_DELAY_MS = 140; // the row stays empty this long before the stack appears
+// Each of the 5 layers swaps its own image on this period, but their swaps
+// are staggered by a fifth of it — so at any instant exactly one layer is
+// mid-crossfade while the other four sit fully visible. Nothing ever
+// freezes-then-jumps as a synced batch; the stack is always quietly moving.
+const CYCLE_INTERVAL_MS = 950;
+
 export default function Capabilities() {
   const sectionRef = useRef<HTMLElement>(null);
+  const stackRef = useRef<HTMLDivElement>(null);
+  const frontRef = useRef<HTMLImageElement>(null);
+  const topRef = useRef<HTMLImageElement>(null);
+  const bottomRef = useRef<HTMLImageElement>(null);
+  const leftRef = useRef<HTMLImageElement>(null);
+  const rightRef = useRef<HTMLImageElement>(null);
 
+  // The stack only exists in the DOM while the entry delay has fully
+  // elapsed — nothing to hide/fade-leak because there's nothing rendered
+  // in between. It's keyed off the whole section, not individual rows, so
+  // moving the cursor around inside the section never stops the cycle.
+  const [isActive, setIsActive] = useState(false);
+  const pendingRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const mouseRef = useRef({ x: 0, y: 0 });
+  // Each layer owns its own cursor into the shared image sequence, advancing
+  // by 5 (one per layer) each swap so the 5 layers never show the same image
+  // at once.
+  const cursorsRef = useRef<number[]>([0, 1, 2, 3, 4]);
+  const layerTimersRef = useRef<Array<ReturnType<typeof setInterval> | ReturnType<typeof setTimeout>>>([]);
+
+  // Scroll reveal for the rows — unrelated to the hover preview below
   useEffect(() => {
     const ctx = gsap.context(() => {
       capabilities.forEach((_, i) => {
@@ -90,12 +119,105 @@ export default function Capabilities() {
     return () => ctx.revert();
   }, []);
 
+  // Drives the stack: once mounted (the entry delay has elapsed) it builds
+  // up one layer at a time — bottom → top → left+right → front — then each
+  // of the 5 layers starts its own continuous, staggered crossfade loop that
+  // keeps running for as long as the section stays hovered, looping through
+  // the shared image sequence with no synchronized pause.
+  useEffect(() => {
+    if (!isActive || !stackRef.current) return;
+
+    const layers = [bottomRef.current, topRef.current, leftRef.current, rightRef.current, frontRef.current];
+    const n = cycleImages.length;
+    cursorsRef.current = [0, 1, 2, 3, 4];
+    layers.forEach((el, i) => {
+      if (el) el.src = cycleImages[cursorsRef.current[i] % n];
+    });
+
+    gsap.set(stackRef.current, { x: mouseRef.current.x, y: mouseRef.current.y, opacity: 1, scale: 1 });
+    gsap.set(layers, { opacity: 0, scale: 0.85 });
+
+    const STEP = 0.1;
+    const LAND = { scale: 1, opacity: 1, duration: 0.2, ease: "power2.out" };
+    const entrance = gsap.timeline();
+    entrance
+      .to(bottomRef.current, LAND, 0)
+      .to(topRef.current, LAND, STEP)
+      .to([leftRef.current, rightRef.current], LAND, STEP * 2)
+      .to(frontRef.current, LAND, STEP * 3);
+
+    const startLayerLoop = (el: HTMLImageElement | null, i: number) => {
+      if (!el) return;
+      const id = setInterval(() => {
+        cursorsRef.current[i] += 5;
+        const nextSrc = cycleImages[cursorsRef.current[i] % n];
+        gsap.to(el, {
+          opacity: 0.25,
+          scale: 0.95,
+          duration: 0.18,
+          ease: "power1.in",
+          onComplete: () => {
+            el.src = nextSrc;
+            gsap.to(el, { opacity: 1, scale: 1, duration: 0.35, ease: "power2.out" });
+          },
+        });
+      }, CYCLE_INTERVAL_MS);
+      layerTimersRef.current.push(id);
+    };
+
+    const staggerDelay = CYCLE_INTERVAL_MS / layers.length;
+    layers.forEach((el, i) => {
+      const t = setTimeout(() => startLayerLoop(el, i), 500 + i * staggerDelay);
+      layerTimersRef.current.push(t);
+    });
+
+    return () => {
+      entrance.kill();
+      layerTimersRef.current.forEach((t) => {
+        clearInterval(t);
+        clearTimeout(t);
+      });
+      layerTimersRef.current = [];
+      gsap.killTweensOf(layers);
+    };
+  }, [isActive]);
+
+  // Attached to the whole section, not individual rows, so crossing from
+  // one row to another never fires this again — only entering/leaving the
+  // section itself does.
+  const handleEnter = (e: React.MouseEvent<HTMLElement>) => {
+    if (pendingRef.current) clearTimeout(pendingRef.current);
+    mouseRef.current = { x: e.clientX, y: e.clientY };
+
+    pendingRef.current = setTimeout(() => {
+      pendingRef.current = null;
+      setIsActive(true);
+    }, START_DELAY_MS);
+  };
+
+  const handleMove = (e: React.MouseEvent<HTMLElement>) => {
+    mouseRef.current = { x: e.clientX, y: e.clientY };
+    if (stackRef.current) {
+      gsap.to(stackRef.current, { x: e.clientX, y: e.clientY, duration: 0.35, ease: "power3.out" });
+    }
+  };
+
+  const handleLeave = () => {
+    if (pendingRef.current) {
+      clearTimeout(pendingRef.current);
+      pendingRef.current = null;
+    }
+    setIsActive(false);
+  };
+
   return (
     <section
       ref={sectionRef}
       id="capabilities"
+      onMouseEnter={handleEnter}
+      onMouseMove={handleMove}
+      onMouseLeave={handleLeave}
       style={{
-        background: "var(--background)",
         position: "relative",
         zIndex: 20,
       }}
@@ -116,10 +238,10 @@ export default function Capabilities() {
             marginBottom: "1.2rem",
           }}
         >
-          Services & Knowledge
+          Compétences &amp; Outils
         </p>
         <h2 className="heading-lg" style={{ color: "var(--foreground)" }}>
-          Capabilities
+          Savoir-faire
         </h2>
       </div>
 
@@ -164,40 +286,118 @@ export default function Capabilities() {
             {cap.title}
           </h3>
 
-          {/* Content */}
-          {cap.type === "service" ? (
-            <p
-              style={{
-                fontSize: "0.88rem",
-                lineHeight: 1.7,
-                color: "var(--muted)",
-                margin: 0,
-                maxWidth: "44ch",
-              }}
-            >
-              {cap.description}
-            </p>
-          ) : (
-            <div style={{ display: "flex", flexWrap: "wrap", gap: "0.4rem 0", alignItems: "center" }}>
-              {cap.tools.map((tool, j) => (
-                <span
-                  key={j}
-                  style={{
-                    fontSize: "clamp(0.82rem, 1vw, 0.95rem)",
-                    color: "var(--muted)",
-                    letterSpacing: "0.02em",
-                  }}
-                >
-                  {tool}
-                  {j < cap.tools.length - 1 && (
-                    <span style={{ opacity: 0.3, margin: "0 0.6rem" }}>·</span>
-                  )}
-                </span>
-              ))}
-            </div>
-          )}
+          {/* Tools */}
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "0.4rem 0", alignItems: "center" }}>
+            {cap.tools.map((tool, j) => (
+              <span
+                key={j}
+                style={{
+                  fontSize: "clamp(0.82rem, 1vw, 0.95rem)",
+                  color: "var(--muted)",
+                  letterSpacing: "0.02em",
+                }}
+              >
+                {tool}
+                {j < cap.tools.length - 1 && (
+                  <span style={{ opacity: 0.3, margin: "0 0.6rem" }}>·</span>
+                )}
+              </span>
+            ))}
+          </div>
         </div>
       ))}
+
+      {/* ── Hover preview stack — only exists in the DOM once the delay has
+           elapsed for the hovered row, follows the cursor while it's active ── */}
+      {isActive && (
+        <div
+          ref={stackRef}
+          aria-hidden="true"
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: STACK_W,
+            height: STACK_H,
+            marginLeft: -STACK_W / 2,
+            marginTop: -STACK_H / 2,
+            opacity: 0,
+            transformOrigin: "center center",
+            pointerEvents: "none",
+            zIndex: 9000,
+          }}
+        >
+          {/* top */}
+          <img
+            ref={topRef}
+            alt=""
+            style={{
+              position: "absolute",
+              inset: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              transform: "translateY(-18%)",
+              zIndex: 1,
+            }}
+          />
+          {/* bottom */}
+          <img
+            ref={bottomRef}
+            alt=""
+            style={{
+              position: "absolute",
+              inset: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              transform: "translateY(18%)",
+              zIndex: 1,
+            }}
+          />
+          {/* left */}
+          <img
+            ref={leftRef}
+            alt=""
+            style={{
+              position: "absolute",
+              inset: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              transform: "translateX(-18%)",
+              zIndex: 2,
+            }}
+          />
+          {/* right */}
+          <img
+            ref={rightRef}
+            alt=""
+            style={{
+              position: "absolute",
+              inset: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              transform: "translateX(18%)",
+              zIndex: 2,
+            }}
+          />
+          {/* front */}
+          <img
+            ref={frontRef}
+            alt=""
+            style={{
+              position: "absolute",
+              inset: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              zIndex: 5,
+            }}
+          />
+        </div>
+      )}
     </section>
   );
 }

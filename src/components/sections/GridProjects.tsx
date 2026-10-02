@@ -3,37 +3,92 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { gridRows, type Project } from "@/data/projects";
+import ProjectLink from "@/components/ui/ProjectLink";
 
 gsap.registerPlugin(ScrollTrigger);
 
-/* ── Project data ─────────────────────────────────────────────
-   Replace tint + title + category with your real content.
-   ratio: CSS aspect-ratio value for the image block.
-─────────────────────────────────────────────────────────────── */
-const rows: Array<Array<{
-  id: string;
-  title: string;
-  category: string;
-  year: string;
-  tint: string;
-  ratio: string;
-  flex: number; // relative width weight in the row
-}>> = [
-  // Row 1 — large left, portrait right
-  [
-    { id: "01", title: "Nom du projet", category: "Branding",    year: "2024", tint: "rgba(160,130,110,0.4)", ratio: "4/3",  flex: 6 },
-    { id: "02", title: "Nom du projet", category: "Web Design",  year: "2024", tint: "rgba( 90,120,150,0.4)", ratio: "3/4",  flex: 4 },
-  ],
-  // Row 2 — portrait left, large right (mirrored)
-  [
-    { id: "03", title: "Nom du projet", category: "Motion",      year: "2023", tint: "rgba(130,100,160,0.4)", ratio: "3/4",  flex: 4 },
-    { id: "04", title: "Nom du projet", category: "Développement",year:"2023", tint: "rgba( 80,140,120,0.4)", ratio: "4/3",  flex: 6 },
-  ],
-  // Row 3 — cinematic full-width
-  [
-    { id: "05", title: "Nom du projet", category: "Creative Dev", year: "2023", tint: "rgba(110,110,130,0.4)", ratio: "21/9", flex: 1 },
-  ],
-];
+function ProjectEntry({ project, index }: { project: Project; index: number }) {
+  const alignRight = index % 2 === 1;
+
+  return (
+    <div style={{ display: "flex", justifyContent: alignRight ? "flex-end" : "flex-start" }}>
+      <ProjectLink
+        href={`/projets/${project.slug}`}
+        className="gp-item"
+        data-cursor-label="logo"
+        style={{
+          display: "block",
+          width: "clamp(240px, 38vw, 580px)",
+          maxWidth: "100%",
+          textDecoration: "none",
+        }}
+      >
+        {/* Label + tagline */}
+        <div className="gp-info" style={{ marginBottom: "1.75rem" }}>
+          <p
+            style={{
+              fontSize: "0.7rem",
+              textTransform: "uppercase",
+              letterSpacing: "0.25em",
+              color: "var(--muted)",
+              marginBottom: "0.9rem",
+            }}
+          >
+            {project.title}
+          </p>
+          <h3
+            style={{
+              fontSize: "clamp(1.4rem, 2.6vw, 2.15rem)",
+              fontWeight: 500,
+              letterSpacing: "-0.015em",
+              lineHeight: 1.2,
+              color: "var(--foreground)",
+              margin: 0,
+            }}
+          >
+            {project.tagline}
+          </h3>
+        </div>
+
+        {/* Image — sized to its own real ratio, never cropped */}
+        <div className="gp-img-wrap" style={{ position: "relative", overflow: "hidden" }}>
+          {project.image ? (
+            <img
+              src={project.image}
+              alt={project.title}
+              draggable={false}
+              className="gp-img"
+              style={{ width: "100%", height: "auto", display: "block" }}
+            />
+          ) : (
+            <div
+              style={{
+                width: "100%",
+                height: "clamp(220px, 32vw, 420px)",
+                background: "var(--border)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <span
+                style={{
+                  fontSize: "0.7rem",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.2em",
+                  color: "var(--muted)",
+                }}
+              >
+                Bientôt disponible
+              </span>
+            </div>
+          )}
+        </div>
+      </ProjectLink>
+    </div>
+  );
+}
 
 export default function GridProjects() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -41,6 +96,11 @@ export default function GridProjects() {
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.utils.toArray<HTMLElement>(".gp-item").forEach((item) => {
+        gsap.from(item.querySelector(".gp-info"), {
+          y: 24, opacity: 0, duration: 0.8,
+          ease: "power3.out",
+          scrollTrigger: { trigger: item, start: "top 85%", once: true },
+        });
         // Image reveal — clip-path wipe from bottom
         gsap.fromTo(
           item.querySelector(".gp-img-wrap"),
@@ -48,16 +108,11 @@ export default function GridProjects() {
           {
             clipPath: "inset(0% 0% 0% 0%)",
             duration: 1.3,
+            delay: 0.15,
             ease: "power4.inOut",
-            scrollTrigger: { trigger: item, start: "top 88%", once: true },
+            scrollTrigger: { trigger: item, start: "top 85%", once: true },
           }
         );
-        // Info fade up
-        gsap.from(item.querySelector(".gp-info"), {
-          y: 18, opacity: 0, duration: 0.7, delay: 0.2,
-          ease: "power3.out",
-          scrollTrigger: { trigger: item, start: "top 85%", once: true },
-        });
         // Subtle zoom out on image itself
         gsap.fromTo(
           item.querySelector(".gp-img"),
@@ -65,8 +120,25 @@ export default function GridProjects() {
           {
             scale: 1,
             duration: 1.4,
+            delay: 0.15,
             ease: "power4.out",
-            scrollTrigger: { trigger: item, start: "top 88%", once: true },
+            scrollTrigger: { trigger: item, start: "top 85%", once: true },
+          }
+        );
+        // Parallax drift on the whole frame rather than the image inside
+        // it, so the image is always shown whole, never cropped.
+        gsap.fromTo(
+          item.querySelector(".gp-img-wrap"),
+          { y: -40 },
+          {
+            y: 40,
+            ease: "none",
+            scrollTrigger: {
+              trigger: item,
+              start: "top bottom",
+              end: "bottom top",
+              scrub: true,
+            },
           }
         );
       });
@@ -79,10 +151,10 @@ export default function GridProjects() {
     <section
       ref={sectionRef}
       id="grid-projects"
-      style={{ background: "var(--background)", position: "relative", zIndex: 20 }}
+      style={{ position: "relative", zIndex: 20 }}
     >
       {/* ── Header ──────────────────────────────────────────── */}
-      <div style={{ padding: "7rem clamp(2.5rem, 5vw, 5rem) 4rem" }}>
+      <div style={{ padding: "7rem clamp(2.5rem, 5vw, 5rem) 6rem" }}>
         <p
           style={{
             fontSize: "0.7rem",
@@ -99,110 +171,17 @@ export default function GridProjects() {
         </h2>
       </div>
 
-      {/* ── Grid ────────────────────────────────────────────── */}
+      {/* ── Staggered list — one project at a time, lots of breathing room ── */}
       <div
         style={{
-          padding: "0 clamp(2.5rem, 5vw, 5rem) 8rem",
+          padding: "0 clamp(2.5rem, 5vw, 5rem) 10rem",
           display: "flex",
           flexDirection: "column",
-          gap: "clamp(2rem, 3vw, 3.5rem)",
+          gap: "clamp(10rem, 32vh, 24rem)",
         }}
       >
-        {rows.map((row, ri) => (
-          <div
-            key={ri}
-            style={{
-              display: "flex",
-              gap: "clamp(1rem, 1.5vw, 1.75rem)",
-              alignItems: "flex-start",
-            }}
-          >
-            {row.map((project) => (
-              <div
-                key={project.id}
-                className="gp-item"
-                style={{ flex: project.flex, minWidth: 0 }}
-              >
-                {/* Image block */}
-                <div
-                  className="gp-img-wrap"
-                  data-cursor="view"
-                  style={{
-                    position: "relative",
-                    aspectRatio: project.ratio,
-                    overflow: "hidden",
-                    display: "block",
-                  }}
-                >
-                  <img
-                    src="/img/exemple.avif"
-                    alt={project.title}
-                    draggable={false}
-                    className="gp-img"
-                    style={{
-                      position: "absolute",
-                      inset: 0,
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                      display: "block",
-                      transformOrigin: "center center",
-                    }}
-                  />
-                  {/* Tint */}
-                  <div
-                    style={{
-                      position: "absolute",
-                      inset: 0,
-                      background: project.tint,
-                      mixBlendMode: "multiply",
-                      pointerEvents: "none",
-                    }}
-                  />
-                </div>
-
-                {/* Info row */}
-                <div
-                  className="gp-info"
-                  style={{
-                    display: "flex",
-                    alignItems: "baseline",
-                    justifyContent: "space-between",
-                    paddingTop: "1rem",
-                    gap: "1rem",
-                  }}
-                >
-                  <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-                    {/* ② Circle on hover */}
-                    <span className="gp-id-circle">{project.id}</span>
-                    <h3
-                      style={{
-                        fontSize: "clamp(0.9rem, 1.2vw, 1.15rem)",
-                        fontWeight: 500,
-                        letterSpacing: "-0.02em",
-                        color: "var(--foreground)",
-                        margin: 0,
-                      }}
-                    >
-                      {project.title}
-                    </h3>
-                  </div>
-                  <span
-                    style={{
-                      fontSize: "0.68rem",
-                      textTransform: "uppercase",
-                      letterSpacing: "0.15em",
-                      color: "var(--muted)",
-                      flexShrink: 0,
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    {project.category} · {project.year}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
+        {gridRows.map((project, i) => (
+          <ProjectEntry key={project.slug} project={project} index={i} />
         ))}
       </div>
     </section>

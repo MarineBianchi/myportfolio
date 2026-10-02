@@ -3,12 +3,18 @@
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 
+// Module-level, so it survives client-side navigation but resets on a
+// full page load — the splash only plays when the site is first opened.
+let hasPlayed = false;
+
 export default function SplashScreen() {
   const overlayRef = useRef<HTMLDivElement>(null);
   const taglineRef = useRef<HTMLParagraphElement>(null);
-  const [hidden, setHidden] = useState(false);
+  const [hidden, setHidden] = useState(hasPlayed);
 
   useEffect(() => {
+    if (hidden) return;
+    hasPlayed = true;
     document.body.style.overflow = "hidden";
 
     const W = window.innerWidth;
@@ -71,6 +77,8 @@ export default function SplashScreen() {
       tl.kill();
       document.body.style.overflow = "";
     };
+    // Only decides on mount whether to play; `hidden` flipping at the end
+    // must not restart anything.
   }, []);
 
   if (hidden) return null;
@@ -171,7 +179,6 @@ export default function SplashScreen() {
             fontWeight: 500,
           }}
         >
-          Bonjour, vous pouvez entrer.
         </p>
       </div>
     </div>

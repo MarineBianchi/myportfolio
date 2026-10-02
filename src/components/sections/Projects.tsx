@@ -1,52 +1,21 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import ProjectLink from "@/components/ui/ProjectLink";
+import { featuredProjects as projects } from "@/data/projects";
 
-const projects = [
-  {
-    id: "01",
-    title: "APIHIVE",
-    category: "Développement Web",
-    year: "2024",
-    description: "Plateforme de gestion d'APIs avec dashboard interactif, authentification et documentation en temps réel.",
-    video: "/videos/APIHIVE.mp4",
-  },
-  {
-    id: "02",
-    title: "Alizée Chaz",
-    category: "Design Graphique",
-    year: "2024",
-    description: "Identité visuelle complète — logotype, charte graphique et supports de communication print & digital.",
-    video: "/videos/AlizeeChaz.mov",
-  },
-  {
-    id: "03",
-    title: "Lea Losteo",
-    category: "Développement Web",
-    year: "2024",
-    description: "Site vitrine avec système de réservation en ligne, animations fluides et intégration CMS headless.",
-    video: "/videos/LeaLosteo.mp4",
-  },
-  {
-    id: "04",
-    title: "Eau & Dev",
-    category: "Creative Dev",
-    year: "2023",
-    description: "Expérience web immersive avec shaders GLSL, storytelling interactif et effets de parallaxe WebGL.",
-    video: "/videos/eau&dev.mp4",
-  },
-  {
-    id: "05",
-    title: "Jardins Nini",
-    category: "UI/UX Design",
-    year: "2023",
-    description: "Refonte UX complète d'une boutique en ligne — parcours utilisateur, prototypage et système de design.",
-    video: "/videos/jardinsNini.mp4",
-  },
-];
+// Band height in px — info + description. Includes a little extra top
+// padding so the sticky panel's title doesn't crowd the fixed navbar once
+// it takes over from the hero.
+const BAND_H = 196;
 
-// Band height in px — info + description
-const BAND_H = 172;
+// Shared backdrop behind every panel's video — brand identity texture,
+// not the project's own photo. fond1/fond2/fond3 are also available for
+// reuse elsewhere.
+const PANEL_BACKDROP = "/img/fond-covers.jpg";
+
+// Vertical breathing room around each panel's video.
+const VIDEO_PAD_Y = "clamp(3rem, 9vh, 6rem)";
 
 export default function Projects() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -83,8 +52,8 @@ export default function Projects() {
       <div
         className="proj-header"
         style={{
-          padding: "7rem clamp(2.5rem, 5vw, 5rem) 5rem",
           background: "var(--background)",
+          padding: "7rem clamp(2.5rem, 5vw, 5rem) 5rem",
         }}
       >
         <p
@@ -96,17 +65,19 @@ export default function Projects() {
             marginBottom: "1.2rem",
           }}
         >
-          Selected work
+          Projets
         </p>
         <h2 className="heading-lg" style={{ color: "var(--foreground)" }}>
-          Featured Works
+          Travaux selectionnés
         </h2>
       </div>
 
       {/* ── Sticky stacked panels ─────────────────────────────── */}
       {projects.map((project, i) => (
-        <section
+        <ProjectLink
           key={project.id}
+          href={`/projets/${project.slug}`}
+          data-cursor-label="logo"
           className="proj-section"
           style={{
             position: "sticky",
@@ -114,6 +85,8 @@ export default function Projects() {
             height: "100vh",
             zIndex: i + 1,
             overflow: "hidden",
+            display: "block",
+            textDecoration: "none",
           }}
         >
           {/* ── Info band — TOP ─────────────────────────────── */}
@@ -127,10 +100,10 @@ export default function Projects() {
               zIndex: 10,
               background: "var(--background)",
               borderBottom: "1px solid var(--border)",
-              padding: "0 clamp(2.5rem, 5vw, 5rem)",
+              padding: "0 clamp(2.5rem, 5vw, 5rem) 1.5rem",
               display: "flex",
               flexDirection: "column",
-              justifyContent: "center",
+              justifyContent: "flex-end",
               gap: "0.55rem",
             }}
           >
@@ -198,7 +171,7 @@ export default function Projects() {
               </div>
             </div>
 
-            {/* Row 2: description */}
+            {/* Row 2: tagline */}
             <p
               style={{
                 fontSize: "0.8rem",
@@ -208,11 +181,11 @@ export default function Projects() {
                 margin: 0,
               }}
             >
-              {project.description}
+              {project.tagline}
             </p>
           </div>
 
-          {/* ── Background image ────────────────────────────── */}
+          {/* ── Background ───────────────────────────────────── */}
           <div
             style={{
               position: "absolute",
@@ -223,21 +196,44 @@ export default function Projects() {
               overflow: "hidden",
             }}
           >
-            <img
-              src="/img/exemple.avif"
-              alt=""
-              aria-hidden="true"
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                display: "block",
-                filter: "brightness(0.55)",
-              }}
-            />
+            {project.backdrop ? (
+              // Project's own backdrop. When blurred, the slight scale hides
+              // the blur's soft edges.
+              <img
+                src={project.backdrop}
+                alt=""
+                aria-hidden="true"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  display: "block",
+                  transform: project.blurBackdrop ? "scale(1.15)" : undefined,
+                  filter: project.blurBackdrop
+                    ? "blur(24px) brightness(0.85)"
+                    : "brightness(0.85)",
+                }}
+              />
+            ) : (
+              <img
+                src={PANEL_BACKDROP}
+                alt=""
+                aria-hidden="true"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  objectPosition: "left center",
+                  display: "block",
+                  transform: "scale(1.6)",
+                  transformOrigin: "left center",
+                  filter: "brightness(0.85)",
+                }}
+              />
+            )}
           </div>
 
-          {/* ── Video centered ──────────────────────────────── */}
+          {/* ── Video / placeholder centered ─────────────────── */}
           <div
             style={{
               position: "absolute",
@@ -249,36 +245,62 @@ export default function Projects() {
               alignItems: "center",
               justifyContent: "center",
               zIndex: 2,
-              padding: "clamp(1.5rem, 3vh, 3rem) clamp(3rem, 8vw, 8rem)",
+              padding: `${VIDEO_PAD_Y} clamp(3rem, 8vw, 8rem)`,
             }}
           >
             <div
               className="proj-video"
               style={{
-                width: "100%",
-                maxWidth: "900px",
+                // Capped by the height left under the band too, so on short
+                // screens the 16:9 frame shrinks instead of being cropped.
+                width: `min(100%, 720px, (100vh - ${BAND_H}px - 2 * ${VIDEO_PAD_Y}) * 16 / 9)`,
                 aspectRatio: "16/9",
                 overflow: "hidden",
                 boxShadow: "0 32px 80px rgba(0,0,0,0.55)",
                 transformOrigin: "center center",
               }}
             >
-              <video
-                src={project.video}
-                autoPlay
-                muted
-                loop
-                playsInline
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                  display: "block",
-                }}
-              />
+              {project.video ? (
+                <video
+                  src={project.video}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    display: "block",
+                  }}
+                />
+              ) : (
+                <div
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    background: "rgba(255,255,255,0.06)",
+                    border: "1px dashed rgba(255,255,255,0.35)",
+                  }}
+                >
+                  <span
+                    style={{
+                      fontSize: "0.75rem",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.2em",
+                      color: "rgba(255,255,255,0.75)",
+                    }}
+                  >
+                    Bientôt disponible
+                  </span>
+                </div>
+              )}
             </div>
           </div>
-        </section>
+        </ProjectLink>
       ))}
 
       {/* ── Transition back to light ─────────────────────────── */}

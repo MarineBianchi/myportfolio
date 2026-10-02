@@ -4,19 +4,29 @@ import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import Image from "next/image";
 
-const videos = [
-  { src: "/videos/APIHIVE.mp4" },
-  { src: "/videos/AlizeeChaz.mov" },
-  { src: "/videos/LeaLosteo.mp4" },
-  { src: "/videos/eau&dev.mp4" },
-  { src: "/videos/jardinsNini.mp4" },
+type ReelItem = { type: "video"; src: string } | { type: "image"; src: string };
+
+const reelItems: ReelItem[] = [
+  { type: "video",  src: "/videos/APIHIVE.mp4" },
+  { type: "image",  src: "/img/taco-loco-01.png" },
+  { type: "video",  src: "/videos/E&D-video.mp4" },
+  { type: "image",  src: "/img/Urban-Keratin-01.jpg" },
+  { type: "image",  src: "/img/DrawTatoo-01.png" },
+  { type: "image",  src: "/img/mountains-updates-01.png" },
+  { type: "image",  src: "/img/jardin-de-nini-01.png" },
+  { type: "image",  src: "/img/ALO-01.jpg" },
+  { type: "image",  src: "/img/illustration-personnelles-01.png" },
+  { type: "image",  src: "/img/E&D_mockup-01.png" },
+  { type: "image",  src: "/img/taco-loco-04.jpg" },
+  { type: "image",  src: "/img/Urban-Keratin-02.jpg" },
 ];
 
-const allVideos = [...videos, ...videos];
+const allItems = [...reelItems, ...reelItems];
 
 const navLinks = [
-  { label: "Portfolio", href: "#projects" },
-  { label: "Services", href: "#skills" },
+  { label: "Portfolio", href: "#grid-projects" },
+  { label: "À propos", href: "#about" },
+  { label: "Services", href: "#capabilities" },
   { label: "Contact", href: "#contact" },
 ];
 
@@ -34,7 +44,7 @@ export default function Hero() {
   useEffect(() => {
     const track = trackRef.current;
     if (!track) return;
-    gsap.to(track, { xPercent: -50, duration: 34, ease: "none", repeat: -1 });
+    gsap.to(track, { xPercent: -50, duration: 55, ease: "none", repeat: -1 });
     return () => gsap.killTweensOf(track);
   }, []);
 
@@ -148,7 +158,7 @@ export default function Hero() {
               marginBottom: "2rem",
             }}
           >
-            Bienvenue.
+Du croquis au code.
           </p>
 
           <h1
@@ -162,60 +172,44 @@ export default function Hero() {
               maxWidth: "16ch",
             }}
           >
-            Entrez dans l'expérience digitale.
-          </h1>
+Je crée des sites et des identités visuelles qui vous ressemblent.          </h1>
 
-          <p
-            className="h-desc"
-            style={{
-              marginTop: "2rem",
-              fontSize: "0.875rem",
-              lineHeight: 1.75,
-              color: "var(--muted)",
-              maxWidth: "30ch",
-            }}
-          >
-            Marine Bianchi — Développeuse Full Stack & Graphiste.
-            <br />
-            Studio ouvert · Basée en France.
-          </p>
         </div>
 
-        {/* Right — deux photos */}
+        {/* Right — deux photos qui descendent sous la bande */}
         <div
           className="h-img"
           style={{
-            width: "clamp(300px, 36vw, 560px)",
+            width: "clamp(400px, 52vw, 880px)",
             flexShrink: 0,
+            alignSelf: "stretch",
             display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
+            alignItems: "stretch",
             gap: "clamp(0.6rem, 1vw, 1rem)",
-            padding: "clamp(1rem, 1.5vw, 1.5rem)",
-            paddingBottom: `calc(${REEL_GAP}px + clamp(130px, 17vh, 190px) + 1rem)`,
+            padding: "clamp(1rem, 1.5vw, 1.5rem) clamp(1rem, 1.5vw, 1.5rem) 0",
             overflow: "hidden",
           }}
         >
-          {/* m2 — grande, portrait */}
-          <div style={{ flex: 5, minWidth: 0, position: "relative", aspectRatio: "3/4", overflow: "hidden" }}>
+          {/* m2 — remplit toute la hauteur */}
+          <div style={{ flex: 5, minWidth: 0, position: "relative", overflow: "hidden" }}>
             <Image
               src="/img/m2.png"
               alt="Marine Bianchi"
               fill
               sizes="(max-width: 768px) 0px, 20vw"
-              className="object-cover object-center"
+              className="object-cover object-top"
               priority
             />
           </div>
 
-          {/* m3 — légèrement décalée */}
-          <div style={{ flex: 4, minWidth: 0, position: "relative", aspectRatio: "2/3", overflow: "hidden", marginTop: "clamp(2rem, 4vw, 5rem)" }}>
+          {/* m3 — décalée vers le bas, déborde en bas */}
+          <div style={{ flex: 4, minWidth: 0, position: "relative", overflow: "hidden", marginTop: "clamp(3rem, 5vw, 6rem)" }}>
             <Image
               src="/img/m3.jpg"
               alt=""
               fill
               sizes="(max-width: 768px) 0px, 15vw"
-              className="object-cover object-center"
+              className="object-cover object-top"
             />
           </div>
         </div>
@@ -231,7 +225,6 @@ export default function Hero() {
           height: REEL,
           zIndex: 10,
           overflow: "hidden",
-          background: "#000",
         }}
       >
         <div
@@ -245,25 +238,30 @@ export default function Hero() {
             padding: "8px 0",
           }}
         >
-          {allVideos.map((v, i) => (
+          {allItems.map((item, i) => (
             <div
               key={i}
               style={{
-                height: "calc(100% - 16px)", /* 16px = 2 × 8px padding vertical */
+                height: "calc(100% - 16px)",
                 aspectRatio: "16/9",
                 flexShrink: 0,
                 overflow: "hidden",
                 borderRadius: 3,
               }}
             >
-              <video
-                src={v.src}
-                autoPlay
-                muted
-                loop
-                playsInline
-                style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-              />
+              {item.type === "video" ? (
+                <video
+                  src={item.src}
+                  autoPlay muted loop playsInline
+                  style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                />
+              ) : (
+                <img
+                  src={item.src}
+                  alt=""
+                  style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                />
+              )}
             </div>
           ))}
         </div>
