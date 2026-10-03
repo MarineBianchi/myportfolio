@@ -82,7 +82,7 @@ export default function Projects() {
           style={{
             position: "sticky",
             top: 0,
-            height: "100dvh",
+            height: "100svh",
             zIndex: i + 1,
             overflow: "hidden",
             display: "block",
@@ -255,7 +255,7 @@ export default function Projects() {
               style={{
                 // Capped by the height left under the band too, so on short
                 // screens the 16:9 frame shrinks instead of being cropped.
-                width: `min(100%, 720px, (100dvh - ${BAND_H}px - 2 * ${VIDEO_PAD_Y}) * 16 / 9)`,
+                width: `min(100%, 720px, (100svh - ${BAND_H}px - 2 * ${VIDEO_PAD_Y}) * 16 / 9)`,
                 aspectRatio: "16/9",
                 overflow: "hidden",
                 boxShadow: "0 32px 80px rgba(0,0,0,0.55)",

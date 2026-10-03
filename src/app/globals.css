@@ -255,7 +255,7 @@ body {
 
 /* Works (photo showcase above "Savoir-faire"): both photos are ~3:2
    landscape - shows them uncropped on mobile instead of covering the
-   (taller, --s * 100dvh-driven) frame. The frame's own height on mobile is
+   (taller, --s * 100svh-driven) frame. The frame's own height on mobile is
    set directly in Works.tsx (inline style, not here - see its comment for
    why: a `.work-frame` rule here was silently dropped by the build's CSS
    minifier while this sibling rule survived untouched). */

@@ -164,7 +164,7 @@ export default function GridProjects() {
             marginBottom: "1.2rem",
           }}
         >
-          Work
+          Portfolio
         </p>
         <h2 className="heading-lg" style={{ color: "var(--foreground)" }}>
           Tous les projets

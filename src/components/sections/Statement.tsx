@@ -28,12 +28,14 @@ const words: Word[] = [
   { text: "deux" },
   { text: "masters," },
   { text: "en" },
-  { text: "communication" },
-  { text: "graphique" },
+  { text: "Communication" },
+  { text: "Digitale" },
   { text: "et" },
-  { text: "en" },
-  { text: "développement" },
-  { text: "web," },
+  { text: "de" },
+  { text: "Concepteur" },
+  { text: "Développeur" },
+  { text: "d'Applications" },
+  { text: "Web," },
   { text: "me" },
   { text: "permettent" },
   { text: "de" },
@@ -78,6 +80,12 @@ export default function Statement() {
     const spans = section.querySelectorAll<HTMLElement>(".stmt-word");
     if (!spans.length) return;
 
+    // Desktop pins 90px down to clear the navbar band; on mobile that
+    // offset pushes the (viewport-tall) section partly off-screen, so the
+    // centered copy ends up with more room above than below - it pins
+    // flush to the top there instead.
+    const mobile = window.matchMedia("(max-width: 768px)").matches;
+
     const ctx = gsap.context(() => {
       gsap.to(spans, {
         opacity: 1,
@@ -85,10 +93,11 @@ export default function Statement() {
         ease: "none",
         scrollTrigger: {
           trigger: section,
-          start: "top top+=90",
+          start: mobile ? "top top" : "top top+=90",
           end: `+=${Math.max(spans.length * 20, 300)}`,
           scrub: true,
           pin: true,
+          anticipatePin: 1,
         },
       });
     }, section);
@@ -107,7 +116,7 @@ export default function Statement() {
           position: "relative",
           zIndex: 20,
           overflow: "hidden",
-          minHeight: "100dvh",
+          minHeight: "100svh",
           display: "flex",
           alignItems: "center",
         }}

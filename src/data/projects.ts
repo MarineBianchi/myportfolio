@@ -29,12 +29,17 @@ export type Project = {
   // brand guidelines PDF), embedded with a link to open it full screen.
   pdf?: { src: string; label: string };
   comingSoon?: boolean;
+  // Live site, shown with a link icon under the deliverables list.
+  url?: string;
 };
 
 export type GalleryItem = {
   id: string;
   title: string;
   image: string;
+  // Crop anchor in the 3:2 mobile card (CSS object-position) - for wide
+  // images whose main subject isn't centered.
+  mobilePosition?: string;
 };
 
 // Selected work - sticky video panels on the home page (Projects.tsx)
@@ -46,6 +51,7 @@ export const featuredProjects: Project[] = [
     category: "Conseil RH",
     year: "2026",
     backdrop: "/img/domoun-fond.jpg",
+    url: "https://www.domoun.fr/",
     tint: "rgba(80,80,80,0.4)",
     tagline: "Un site et un média sur mesure pour un cabinet de conseil en ressources humaines.",
     deliverables: [
@@ -74,8 +80,8 @@ export const featuredProjects: Project[] = [
       "/img/Apihive-05.png",
     ],
     video: "/videos/APIHIVE.mp4",
-    backdrop: "/img/apihivejpg",
-    blurBackdrop: true,
+    backdrop: "/img/apihive-fond.jpg",
+    url: "http://apihive.fr/",
     tint: "rgba(40,70,100,0.35)",
     tagline: "Un site e-commerce et un dashboard pour rendre lisible, d'un coup d'œil, la vie d'une ruche connectée.",
     deliverables: [
@@ -98,13 +104,14 @@ export const featuredProjects: Project[] = [
   {
     id: "03",
     slug: "e-d",
-    title: "E&D",
+    title: "Eau et développement",
     category: "Social",
     year: "2023",
     image: "/img/E&D_mockup-01.png",
     images: ["/img/E&D_site-02.png"],
     video: "/videos/E&D-video.mp4",
     backdrop: "/img/E&D-fond.jpg",
+    url: "https://eauetdeveloppement.org/",
     tint: "rgba(60,110,160,0.35)",
     tagline: "Un site vitrine pour l'accès à l'eau au Togo",
     deliverables: [
@@ -155,7 +162,7 @@ export const gridRows: Project[] = [
       "/img/Urban-Keratin-04.jpg",
     ],
     tint: "rgba(200,150,170,0.35)",
-    tagline: "Faire passer une marque professionnelle du salon de coiffure à la salle de bain.",
+    tagline: "Lancement d'une gamme de produits cosmétiques auprès du grand public.",
     deliverables: [
       "Étude de marché",
       "Plateforme de marque",
@@ -192,6 +199,7 @@ export const gridRows: Project[] = [
     description:
       "La palette reprend les couleurs du cabinet pour que le site et le lieu se répondent : le patient retrouve sur place l'univers découvert en ligne, jusqu'au logo posé sur la porte d'entrée.",
     pdf: { src: "/img/LeaLosteo-05.pdf", label: "Charte graphique" },
+    url: "https://www.lealosteo.com/",
   },
   {
     id: "04",
@@ -208,7 +216,7 @@ export const gridRows: Project[] = [
       "/img/mountains-updates-06.jpg",
     ],
     tint: "rgba(70,90,110,0.4)",
-    tagline: "Un logo et des illustrations à l'image de la haute montagne.",
+    tagline: "Un logo et des illustrations pour parler de la haute montagne.",
     deliverables: [
       "Logo",
       "Illustrations",
@@ -271,8 +279,9 @@ export const gridRows: Project[] = [
     year: "2023",
     image: "/img/jardin-de-nini-01.png",
     images: ["/img/jardin-de-nini-02.png", "/img/jardin-de-nini-03.jpg"],
+    url: "https://lesjardinsdenini.com/",
     tint: "rgba(60,100,160,0.35)",
-    tagline: "Une identité visuelle et une boutique en ligne pour vendre ses fruits et légumes.",
+    tagline: "Création d'une identité visuelle et d'une boutique en ligne pour vendre des paniers de légumes.",
     deliverables: [
       "Identité visuelle",
       "Maquettes du site e-commerce",
@@ -331,12 +340,13 @@ export const otherProjects: GalleryItem[] = [
     id: "02",
     title: "Arborescence Avocats",
     image: "/img/projects/Arborescence-avocats.png",
+    mobilePosition: "left center",
   },
 
     {
     id: "03",
     title: "Adhoc",
-    image: "/img/projects/adhoc.jpg"
+    image: "/img/projects/adhoc.jpg",
   },
     {
     id: "04",

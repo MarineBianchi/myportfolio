@@ -121,7 +121,7 @@ export default function Hero() {
             }}
           />
           <span style={{ fontSize: "0.72rem", letterSpacing: "0.06em", color: "var(--muted)" }}>
-            Available for work
+            Disponible pour de nouveaux projets
           </span>
         </div>
       </div>

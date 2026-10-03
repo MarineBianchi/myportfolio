@@ -16,6 +16,10 @@ export default function Navbar() {
   // Hero has its own top/bottom bars - this header only takes over once
   // the hero has fully scrolled past, so the two never overlap.
   const [visible, setVisible] = useState(false);
+  // Over the Works photos, difference blending turns the white text into
+  // muddy grays/cyans - the header drops the blend and stays plain white
+  // while that section is under it.
+  const [overPhoto, setOverPhoto] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
@@ -25,6 +29,9 @@ export default function Navbar() {
       const hero = document.getElementById("hero");
       const heroBottom = hero ? hero.getBoundingClientRect().bottom : 0;
       setVisible(heroBottom <= 2);
+      const works = document.getElementById("works")?.getBoundingClientRect();
+      const navH = navRef.current?.offsetHeight ?? 0;
+      setOverPhoto(!!works && works.top <= navH / 2 && works.bottom >= navH / 2);
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -72,7 +79,7 @@ export default function Navbar() {
           // against fixed white text self-inverts to stay legible on whatever
           // is behind it, instead of tracking each section's theme by hand.
           color: "#ffffff",
-          mixBlendMode: "difference",
+          mixBlendMode: overPhoto ? "normal" : "difference",
           opacity: visible ? 1 : 0,
           pointerEvents: visible ? "auto" : "none",
           transform: visible ? "translateY(0)" : "translateY(-8px)",

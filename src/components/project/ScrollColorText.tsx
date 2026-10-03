@@ -53,7 +53,7 @@ export default function ScrollColorText({
       <div
         ref={sectionRef}
         style={{
-          minHeight: "60dvh",
+          minHeight: "60svh",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",

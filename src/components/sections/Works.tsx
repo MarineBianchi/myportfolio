@@ -93,7 +93,7 @@ export default function PhotoShowcase() {
 
   if (reducedMotion) {
     return (
-      <section className="relative h-dvh" style={{ zIndex: 20 }}>
+      <section className="relative h-lvh" style={{ zIndex: 20 }}>
         <Image src={PHOTO_B} alt="" fill sizes="100vw" priority className="object-cover" />
       </section>
     );
@@ -109,7 +109,7 @@ export default function PhotoShowcase() {
       // pinned Statement section right above it.
       style={{ height: "500vh", zIndex: 20 }}
     >
-      <div className="sticky top-0 h-dvh overflow-hidden">
+      <div className="sticky top-0 h-lvh overflow-hidden">
         <div ref={bg} className="absolute inset-0 will-change-transform">
           <Image src={BACKDROP} alt="" fill sizes="100vw" priority className="object-cover" />
         </div>
@@ -119,14 +119,16 @@ export default function PhotoShowcase() {
           style={
             {
               ["--s" as string]: 1,
-              width: "calc(var(--s) * 100vw)",
+              // Mobile keeps a 1rem gutter each side even at full size, so
+              // the photo never touches the phone's edges.
+              width: isMobile ? "calc(var(--s) * (100vw - 2rem))" : "calc(var(--s) * 100vw)",
               // Both photos are ~3:2 landscape - on a portrait phone,
-              // `--s * 100dvh` is far taller than that ratio needs, leaving
+              // `--s * 100svh` is far taller than that ratio needs, leaving
               // a big empty letterboxed band above/below the (object-contain)
               // image inside the frame. Mobile instead derives height from
               // the frame's own (still --s-animated) width at that ratio,
               // so it hugs the photo with no dead space.
-              height: isMobile ? "auto" : "calc(var(--s) * 100dvh)",
+              height: isMobile ? "auto" : "calc(var(--s) * 100svh)",
               aspectRatio: isMobile ? "3 / 2" : undefined,
             } as CSSProperties
           }

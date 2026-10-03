@@ -33,7 +33,7 @@ export default function OtherProjects() {
     // the same (still-`false`) initial render, so the state alone would let
     // this fire once on phones with `pin: true` before the next render
     // corrects it - leaving a stray pin-spacer sized for the desktop
-    // 100dvh layout sitting as dead space above the footer.
+    // 100svh layout sitting as dead space above the footer.
     const mobile = window.matchMedia("(max-width: 768px)").matches;
     if (!pinWrap || !track || mobile) return;
 
@@ -84,7 +84,7 @@ export default function OtherProjects() {
               marginBottom: "1.2rem",
             }}
           >
-            Work
+            Et aussi
           </p>
           <h2 className="heading-lg" style={{ color: "var(--foreground)" }}>
             Autres projets
@@ -120,7 +120,7 @@ export default function OtherProjects() {
         style={
           isMobile
             ? { position: "relative", overflowX: "auto", WebkitOverflowScrolling: "touch" }
-            : { position: "relative", height: "100dvh", overflow: "hidden" }
+            : { position: "relative", height: "100svh", overflow: "hidden" }
         }
       >
         <div
@@ -147,12 +147,9 @@ export default function OtherProjects() {
                 isMobile
                   ? {
                       position: "relative",
-                      width: "80vw",
-                      height: "65vh",
+                      width: "88vw",
                       flexShrink: 0,
                       scrollSnapAlign: "start",
-                      borderRadius: 8,
-                      overflow: "hidden",
                     }
                   : {
                       position: "relative",
@@ -167,15 +164,24 @@ export default function OtherProjects() {
                 alt={item.title}
                 draggable={false}
                 style={{
-                  position: "absolute",
-                  inset: 0,
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
+                  ...(isMobile
+                    ? {
+                        // One shared 3:2 frame - the middle ground between
+                        // the ~2:1 panoramas and the square posters.
+                        width: "100%",
+                        aspectRatio: "3 / 2",
+                        objectFit: "cover",
+                        objectPosition: item.mobilePosition,
+                        borderRadius: 8,
+                      }
+                    : { position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }),
                   display: "block",
                   pointerEvents: "none",
                 }}
               />
+              {/* Desktop overlays the title on the full-screen image; on the
+                  smaller mobile card it sits below, clear of the image. */}
+              {!isMobile && (
               <div
                 style={{
                   position: "absolute",
@@ -185,19 +191,30 @@ export default function OtherProjects() {
                   pointerEvents: "none",
                 }}
               />
+              )}
               <p
-                style={{
-                  position: "absolute",
-                  bottom: "clamp(2rem, 5vw, 3.5rem)",
-                  left: "clamp(2.5rem, 5vw, 5rem)",
-                  right: "clamp(2.5rem, 5vw, 5rem)",
-                  fontSize: "clamp(1.5rem, 3.5vw, 2.75rem)",
-                  fontWeight: 500,
-                  letterSpacing: "-0.01em",
-                  color: "white",
-                  margin: 0,
-                  pointerEvents: "none",
-                }}
+                style={
+                  isMobile
+                    ? {
+                        marginTop: "0.75rem",
+                        fontSize: "1.1rem",
+                        fontWeight: 500,
+                        letterSpacing: "-0.01em",
+                        color: "var(--foreground)",
+                      }
+                    : {
+                        position: "absolute",
+                        bottom: "clamp(2rem, 5vw, 3.5rem)",
+                        left: "clamp(2.5rem, 5vw, 5rem)",
+                        right: "clamp(2.5rem, 5vw, 5rem)",
+                        fontSize: "clamp(1.5rem, 3.5vw, 2.75rem)",
+                        fontWeight: 500,
+                        letterSpacing: "-0.01em",
+                        color: "white",
+                        margin: 0,
+                        pointerEvents: "none",
+                      }
+                }
               >
                 {item.title}
               </p>

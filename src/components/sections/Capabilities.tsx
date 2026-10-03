@@ -47,7 +47,7 @@ const capabilities: CapRow[] = [
   {
     id: "07",
     title: "Outils",
-    tools: ["Jenkins", "N8N", "Keycloak", "Graylog", "Docker", "Notion"],
+    tools: ["Jenkins", "N8N", "Keycloak", "Graylog", "Docker", "Notion", "Jira", "Teams"],
   },
   {
     id: "08",
@@ -73,6 +73,15 @@ const START_DELAY_MS = 140; // the row stays empty this long before the stack ap
 // mid-crossfade while the other four sit fully visible. Nothing ever
 // freezes-then-jumps as a synced batch; the stack is always quietly moving.
 const CYCLE_INTERVAL_MS = 950;
+// Touch screens have no hover-out to end the stack - a tap lands this many
+// images (1-5) one after another, holds briefly, then the whole stack fades
+// out at once. No cycling on touch.
+const TOUCH_MAX_IMAGES = 6;
+const TOUCH_HOLD_S = 0.5;
+
+// Same test as the custom cursor's CSS (globals.css): anything that isn't a
+// real mouse is treated as touch.
+const isTouch = () => !window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
 export default function Capabilities() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -139,6 +148,20 @@ export default function Capabilities() {
 
     const STEP = 0.1;
     const LAND = { scale: 1, opacity: 1, duration: 0.2, ease: "power2.out" };
+
+    if (isTouch()) {
+      const touchTl = gsap.timeline({ onComplete: () => setIsActive(false) });
+      layers.slice(0, TOUCH_MAX_IMAGES).forEach((el, i) => touchTl.to(el, LAND, i * 0.15));
+      touchTl.to(
+        stackRef.current,
+        { opacity: 0, scale: 0.9, duration: 0.35, ease: "power2.in" },
+        `+=${TOUCH_HOLD_S}`
+      );
+      return () => {
+        touchTl.kill();
+      };
+    }
+
     const entrance = gsap.timeline();
     entrance
       .to(bottomRef.current, LAND, 0)
@@ -185,7 +208,7 @@ export default function Capabilities() {
   // Attached to the whole section, not individual rows, so crossing from
   // one row to another never fires this again - only entering/leaving the
   // section itself does.
-  const handleEnter = (e: React.MouseEvent<HTMLElement>) => {
+  const activate = (e: React.MouseEvent<HTMLElement>) => {
     if (pendingRef.current) clearTimeout(pendingRef.current);
     mouseRef.current = { x: e.clientX, y: e.clientY };
 
@@ -193,6 +216,16 @@ export default function Capabilities() {
       pendingRef.current = null;
       setIsActive(true);
     }, START_DELAY_MS);
+  };
+
+  // On touch, the emulated mouseenter only fires on the first tap into the
+  // section - taps drive the stack instead, so it can restart after closing.
+  const handleEnter = (e: React.MouseEvent<HTMLElement>) => {
+    if (!isTouch()) activate(e);
+  };
+
+  const handleTap = (e: React.MouseEvent<HTMLElement>) => {
+    if (isTouch() && !isActive && !pendingRef.current) activate(e);
   };
 
   const handleMove = (e: React.MouseEvent<HTMLElement>) => {
@@ -217,6 +250,7 @@ export default function Capabilities() {
       onMouseEnter={handleEnter}
       onMouseMove={handleMove}
       onMouseLeave={handleLeave}
+      onClick={handleTap}
       style={{
         position: "relative",
         zIndex: 20,
