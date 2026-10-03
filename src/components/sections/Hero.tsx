@@ -121,7 +121,7 @@ export default function Hero() {
             }}
           />
           <span style={{ fontSize: "0.72rem", letterSpacing: "0.06em", color: "var(--muted)" }}>
-            Disponible pour de nouveaux projets
+            Disponible
           </span>
         </div>
       </div>
@@ -175,7 +175,7 @@ Du croquis au code.
               maxWidth: "16ch",
             }}
           >
-Je crée des sites et des identités visuelles qui vous ressemblent.          </h1>
+Je crée des identités visuelles, des sites et des applications qui vous ressemblent.          </h1>
 
         </div>
 

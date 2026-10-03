@@ -18,6 +18,12 @@ const SITE_NAME = "Marine Bianchi";
 const DESCRIPTION =
   "Marine Bianchi, développeuse full stack et designer graphique basée en France. Portfolio de sites web, identités visuelles et expériences interactives animées (GSAP, Next.js, Webflow).";
 
+// Link previews (WhatsApp, LinkedIn, Slack...) use the site's own voice;
+// the search title above keeps the role keywords.
+const SHARE_TITLE = `${SITE_NAME} - Design & développement web`;
+const SHARE_DESCRIPTION =
+  "Du croquis au code : je crée des identités visuelles, des sites et des applications qui vous ressemblent. Designer graphique et développeuse full stack, basée en France.";
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
@@ -51,13 +57,13 @@ export const metadata: Metadata = {
     locale: "fr_FR",
     url: "/",
     siteName: SITE_NAME,
-    title: `${SITE_NAME} - Développeuse Full Stack & Designer Graphique`,
-    description: DESCRIPTION,
+    title: SHARE_TITLE,
+    description: SHARE_DESCRIPTION,
   },
   twitter: {
     card: "summary_large_image",
-    title: `${SITE_NAME} - Développeuse Full Stack & Designer Graphique`,
-    description: DESCRIPTION,
+    title: SHARE_TITLE,
+    description: SHARE_DESCRIPTION,
   },
 };
 

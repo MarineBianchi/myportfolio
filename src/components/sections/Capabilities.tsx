@@ -17,7 +17,7 @@ const capabilities: CapRow[] = [
   {
     id: "01",
     title: "Design & Branding",
-    tools: ["Suite Adobe", "Figma (maquettes webdesign)"],
+    tools: ["Photoshop", "InDesign", "Illustrator", "Premiere", "Figma", "Canva", "Procreate"],
   },
   {
     id: "02",
