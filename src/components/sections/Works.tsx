@@ -43,6 +43,12 @@ export default function PhotoShowcase() {
     return () => mq.removeEventListener("change", update);
   }, []);
 
+  // The section's height depends on isMobile - every trigger below it
+  // (and this one) has to be re-measured once it changes.
+  useEffect(() => {
+    ScrollTrigger.refresh();
+  }, [isMobile]);
+
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
     const update = () => setReducedMotion(mq.matches);
@@ -65,7 +71,19 @@ export default function PhotoShowcase() {
       const R = { immediateRender: false };
       const tl = gsap.timeline({
         defaults: { ease: "power2.inOut" },
-        scrollTrigger: { trigger: wrap.current, start: "top top", end: "bottom bottom", scrub: 0.6 },
+        scrollTrigger: {
+          trigger: wrap.current,
+          start: "top top",
+          end: "bottom bottom",
+          scrub: 0.6,
+          // useGSAP creates this trigger in a layout effect - before the
+          // Statement section above has created its pin (plain effect).
+          // Refreshing in creation order would measure this start without
+          // that pin's spacer, ~1100px too early, so the sequence ran ahead
+          // of the scroll (on mobile it had already finished on arrival).
+          // A lower priority makes it refresh after every pin above it.
+          refreshPriority: -1,
+        },
       });
 
       tl
@@ -86,7 +104,8 @@ export default function PhotoShowcase() {
         .fromTo(frame.current, { "--s": 0.6 }, { "--s": 1, duration: 0.26, ...R }, 0.42)
         .fromTo(b.current, { scale: 1.0 }, { scale: 1.8, duration: 0.26, ...R }, 0.42)
         .fromTo(bg.current, { scale: 1.0 }, { scale: 1.5, duration: 0.26, ...R }, 0.42);
-      // 0.68 → 1 : pause, B en plein écran
+      // La timeline s'arrête à 0.68 : le scrub l'étire sur toute la section,
+      // donc pas de pause finale - B atteint le plein écran en fin de section.
     },
     { scope: wrap, dependencies: [reducedMotion] }
   );
@@ -107,7 +126,8 @@ export default function PhotoShowcase() {
       // Every other themed section on the page sits at z-index 20 - kept
       // here too so this section reliably wins any stacking tie against the
       // pinned Statement section right above it.
-      style={{ height: "500vh", zIndex: 20 }}
+      // Half the scroll distance on mobile - the same sequence, fewer swipes.
+      style={{ height: isMobile ? "250vh" : "500vh", zIndex: 20 }}
     >
       <div className="sticky top-0 h-lvh overflow-hidden">
         <div ref={bg} className="absolute inset-0 will-change-transform">
