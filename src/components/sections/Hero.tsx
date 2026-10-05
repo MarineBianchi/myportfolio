@@ -146,9 +146,11 @@ export default function Hero() {
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
-            padding: `0 clamp(2.5rem, 5vw, 5rem)`,
-            // Push text up so it clears the reel strip
-            paddingBottom: REEL,
+            // Tighter on the right so the photos can sit closer to the text.
+            padding: `0 clamp(1.5rem, 2.5vw, 2.5rem) 0 clamp(2.5rem, 5vw, 5rem)`,
+            // Push text up so it clears the reel strip - its height, the gap
+            // it sits on, plus breathing room above it.
+            paddingBottom: `calc(${REEL} + ${REEL_GAP}px + clamp(1.5rem, 5vh, 3.5rem))`,
           }}
         >
           <p
@@ -183,7 +185,7 @@ Je crée des identités visuelles, des sites et des applications qui vous ressem
         <div
           className="h-img h-photos"
           style={{
-            width: "clamp(400px, 52vw, 880px)",
+            width: "clamp(400px, 56vw, 1080px)",
             flexShrink: 0,
             alignSelf: "stretch",
             display: "flex",
@@ -194,7 +196,7 @@ Je crée des identités visuelles, des sites et des applications qui vous ressem
           }}
         >
           {/* m2 - remplit toute la hauteur */}
-          <div className="h-photo-1" style={{ flex: 5, minWidth: 0, position: "relative", overflow: "hidden" }}>
+          <div className="h-photo-1" style={{ flex: 4, minWidth: 0, position: "relative", overflow: "hidden" }}>
             <Image
               src="/img/m2.webp"
               alt="Marine Bianchi"
@@ -205,13 +207,15 @@ Je crée des identités visuelles, des sites et des applications qui vous ressem
             />
           </div>
 
-          {/* m3 - décalée vers le bas, déborde en bas */}
-          <div className="h-photo-2" style={{ flex: 4, minWidth: 0, position: "relative", overflow: "hidden", marginTop: "clamp(3rem, 5vw, 6rem)" }}>
+          {/* Portrait - décalé vers le bas, déborde en bas. Paysage dans un
+            cadre vertical : plus large et moins haut que la photo de gauche
+            pour que le recadrage zoome moins sur le visage. */}
+          <div className="h-photo-2" style={{ flex: 5, minWidth: 0, position: "relative", overflow: "hidden", marginTop: "clamp(3rem, min(8vw, 11vh), 8rem)" }}>
             <Image
               src="/img/IMG-18635.webp"
               alt=""
               fill
-              sizes="(max-width: 768px) 40vw, 15vw"
+              sizes="(max-width: 768px) 50vw, 25vw"
               className="object-cover object-top"
             />
           </div>
