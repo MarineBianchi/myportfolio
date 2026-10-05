@@ -56,6 +56,10 @@ export default function Navbar() {
 
   const go = (href: string) => {
     setMenuOpen(false);
+    // The open menu stopped Lenis, and a stopped Lenis ignores scrollTo -
+    // restart it now rather than waiting for the effect above, which only
+    // runs after this scroll request would already have been dropped.
+    (window as unknown as { lenis?: { start: () => void } }).lenis?.start();
     scrollToSection(router, href);
   };
 
@@ -91,6 +95,8 @@ export default function Navbar() {
           onClick={(e) => {
             e.preventDefault();
             setMenuOpen(false);
+            // Same as go(): Lenis may still be stopped by the open menu.
+            (window as unknown as { lenis?: { start: () => void } }).lenis?.start();
             scrollToHome(router, pathname);
           }}
           style={{

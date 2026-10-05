@@ -208,7 +208,7 @@ Je crée des identités visuelles, des sites et des applications qui vous ressem
           {/* m3 - décalée vers le bas, déborde en bas */}
           <div className="h-photo-2" style={{ flex: 4, minWidth: 0, position: "relative", overflow: "hidden", marginTop: "clamp(3rem, 5vw, 6rem)" }}>
             <Image
-              src="/img/m3.webp"
+              src="/img/IMG-18635.webp"
               alt=""
               fill
               sizes="(max-width: 768px) 40vw, 15vw"

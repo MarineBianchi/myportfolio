@@ -22,6 +22,7 @@ export const imageSizes: Record<string, [number, number]> = {
   "/img/E&D-fond.webp": [2000, 3000],
   "/img/E&D_mockup-01.webp": [1080, 1080],
   "/img/E&D_site-02.webp": [1080, 1080],
+  "/img/IMG-18635.webp": [1264, 848],
   "/img/LeaLosteo-01.webp": [2000, 2000],
   "/img/LeaLosteo-02.webp": [1080, 1350],
   "/img/LeaLosteo-03.webp": [1080, 1350],
