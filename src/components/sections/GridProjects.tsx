@@ -12,7 +12,10 @@ function ProjectEntry({ project, index }: { project: Project; index: number }) {
   const alignRight = index % 2 === 1;
 
   return (
-    <div style={{ display: "flex", justifyContent: alignRight ? "flex-end" : "flex-start" }}>
+    <div
+      id={`projet-${project.slug}`}
+      style={{ display: "flex", justifyContent: alignRight ? "flex-end" : "flex-start" }}
+    >
       <ProjectLink
         href={`/projets/${project.slug}`}
         className="gp-item"

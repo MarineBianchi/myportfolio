@@ -9,6 +9,12 @@ export type Project = {
   image?: string;
   images?: string[];
   video?: string;
+  // Video width / height when it isn't 16:9 - the home page panel widens
+  // (same height) to fit it instead of cropping the sides.
+  videoAspect?: number;
+  // Height cap for videos on the project page (default 70svh) - raise it
+  // for square/portrait videos that read too small at the default.
+  detailVideoMaxHeight?: string;
   // Home page panel backdrop behind the video. Falls back to the shared
   // brand texture when absent; `blurBackdrop` softens it into ambiance.
   backdrop?: string;
@@ -50,10 +56,18 @@ export const featuredProjects: Project[] = [
     title: "DOMOUN",
     category: "Conseil RH",
     year: "2026",
+    image: "/img/DOMOUN-01.png",
+    images: [
+      "/img/DOMOUN-02png.png",
+      "/img/DOMOUN-03.png",
+      "/img/DOMOUN-04.png",
+    ],
+    video: "/videos/DOMOUN.mp4",
+    videoAspect: 1368 / 672,
     backdrop: "/img/domoun-fond.jpg",
     url: "https://www.domoun.fr/",
     tint: "rgba(80,80,80,0.4)",
-    tagline: "Un site et un média sur mesure pour un cabinet de conseil en ressources humaines.",
+    tagline: "Un site et un média sur mesure pour une entreprise réunionnaise de conseil et formation en RH, tournée vers l'emploi local.",
     deliverables: [
       "Design du site",
       "Développement Webflow",
@@ -63,7 +77,7 @@ export const featuredProjects: Project[] = [
       "SEO",
     ],
     description:
-      "Conception et développement du site d'un cabinet de conseil RH sur Webflow : parcours clair, animations au scroll, illustrations dans la charte de marque, et un espace blog/média géré via le CMS pour que la fondatrice publie ses contenus en autonomie.",
+      "Conception et développement du site sur Webflow : animations au scroll, illustrations dans la charte de marque, et un espace média géré via le CMS pour que la fondatrice publie ses contenus en autonomie.",
     comingSoon: false,
   },
   {
@@ -80,6 +94,7 @@ export const featuredProjects: Project[] = [
       "/img/Apihive-05.png",
     ],
     video: "/videos/APIHIVE.mp4",
+    videoAspect: 2048 / 1080,
     backdrop: "/img/apihive-fond.jpg",
     url: "http://apihive.fr/",
     tint: "rgba(40,70,100,0.35)",
@@ -110,10 +125,11 @@ export const featuredProjects: Project[] = [
     image: "/img/E&D_mockup-01.png",
     images: ["/img/E&D_site-02.png"],
     video: "/videos/E&D-video.mp4",
+    detailVideoMaxHeight: "88svh",
     backdrop: "/img/E&D-fond.jpg",
     url: "https://eauetdeveloppement.org/",
     tint: "rgba(60,110,160,0.35)",
-    tagline: "Un site vitrine pour l'accès à l'eau au Togo",
+    tagline: "Un site vitrine pour l'accès à l'eau au Togo.",
     deliverables: [
       "Site vitrine",
       "Développement WordPress",
@@ -189,7 +205,7 @@ export const gridRows: Project[] = [
       "/img/LeaLosteo-07.png",
     ],
     tint: "rgba(90,150,140,0.35)",
-    tagline: "Une identité apaisante, de l'écran jusqu'aux murs du cabinet.",
+    tagline: "Une identité apaisante, du site aux murs du cabinet.",
     deliverables: [
       "Branding",
       "Logo",
@@ -233,7 +249,7 @@ export const gridRows: Project[] = [
     image: "/img/DrawTatoo-01.png",
     images: ["/img/DrawTatoo-02.png", "/img/DrawTatoo-03.jpg"],
     tint: "rgba(30,30,50,0.4)",
-    tagline: "Une identité street pour un salon de tatouage inclusif",
+    tagline: "Une identité street pour un salon de tatouage inclusif.",
     deliverables: [
       "Refonte de l'identité visuelle",
       "Affiches",
@@ -259,7 +275,7 @@ export const gridRows: Project[] = [
       "/img/taco-loco-08.png",
     ],
     tint: "rgba(180,80,60,0.35)",
-    tagline: "Un univers pop et gourmand pour de la street food",
+    tagline: "Un univers pop et gourmand pour de la street food créole.",
     deliverables: [
       "Univers de marque",
       "Illustrations (Frida Kahlo)",
@@ -281,7 +297,7 @@ export const gridRows: Project[] = [
     images: ["/img/jardin-de-nini-02.png", "/img/jardin-de-nini-03.jpg"],
     url: "https://lesjardinsdenini.com/",
     tint: "rgba(60,100,160,0.35)",
-    tagline: "Création d'une identité visuelle et d'une boutique en ligne pour vendre des paniers de légumes.",
+    tagline: "Une identité visuelle et une boutique en ligne qui accompagnent la vente de produits locaux.",
     deliverables: [
       "Identité visuelle",
       "Maquettes du site e-commerce",
@@ -309,7 +325,7 @@ export const gridRows: Project[] = [
       "Plaquette commerciale",
     ],
     description:
-      "Identité de marque sur mesure pour ALO, agence de communication : logo, charte graphique et déclinaisons d'outils de communication. ",
+      "Identité de marque sur mesure pour ALO, agence de communication : logo, charte graphique et déclinaisons d'outils de communication.",
   },
   {
     id: "09",

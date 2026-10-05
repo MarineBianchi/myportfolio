@@ -326,7 +326,7 @@ Je crée des identités visuelles, des sites et des applications qui vous ressem
             color: "var(--muted)",
           }}
         >
-          France · 2024
+          France · 2026
         </span>
       </div>
     </section>

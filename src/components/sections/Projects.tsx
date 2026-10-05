@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { Fragment, useEffect, useRef } from "react";
 import ProjectLink from "@/components/ui/ProjectLink";
 import { featuredProjects as projects } from "@/data/projects";
 
@@ -68,14 +68,22 @@ export default function Projects() {
           Projets
         </p>
         <h2 className="heading-lg" style={{ color: "var(--foreground)" }}>
-          Travaux selectionnés
+          Travaux mis
+          <br />
+          en avant
         </h2>
       </div>
 
       {/* ── Sticky stacked panels ─────────────────────────────── */}
-      {projects.map((project, i) => (
+      {projects.map((project, i) => {
+        const aspect = project.videoAspect ?? 16 / 9;
+        return (
+        <Fragment key={project.id}>
+        {/* Scroll target for the project page's back link - the panel
+          itself is sticky, so its live rect can't give its scroll position;
+          this zero-height marker sits where the panel starts in the flow. */}
+        <div id={`projet-${project.slug}`} aria-hidden="true" />
         <ProjectLink
-          key={project.id}
           href={`/projets/${project.slug}`}
           data-cursor-label="logo"
           className="proj-section"
@@ -254,9 +262,10 @@ export default function Projects() {
               className="proj-video"
               style={{
                 // Capped by the height left under the band too, so on short
-                // screens the 16:9 frame shrinks instead of being cropped.
-                width: `min(100%, 720px, (100svh - ${BAND_H}px - 2 * ${VIDEO_PAD_Y}) * 16 / 9)`,
-                aspectRatio: "16/9",
+                // screens the frame shrinks instead of being cropped. Wider
+                // videos keep the 16:9 frame's max height and grow in width.
+                width: `min(100%, ${720 * aspect / (16 / 9)}px, (100svh - ${BAND_H}px - 2 * ${VIDEO_PAD_Y}) * ${aspect})`,
+                aspectRatio: `${aspect}`,
                 overflow: "hidden",
                 boxShadow: "0 32px 80px rgba(0,0,0,0.55)",
                 transformOrigin: "center center",
@@ -303,7 +312,9 @@ export default function Projects() {
             </div>
           </div>
         </ProjectLink>
-      ))}
+        </Fragment>
+        );
+      })}
 
       {/* ── Transition back to light ─────────────────────────── */}
       <div

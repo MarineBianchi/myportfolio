@@ -4,7 +4,7 @@ import { useEffect, useRef, type CSSProperties } from "react";
 import { useRouter } from "next/navigation";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import type { MediaItem, Project } from "@/data/projects";
+import { featuredProjects, type MediaItem, type Project } from "@/data/projects";
 import ScrollColorText from "@/components/project/ScrollColorText";
 import RevealImages from "@/components/project/RevealImages";
 import Footer from "@/components/ui/Footer";
@@ -12,6 +12,20 @@ import { PALETTE } from "@/components/ui/ThemeSection";
 import { scrollToSection } from "@/lib/scrollToSection";
 
 gsap.registerPlugin(ScrollTrigger);
+
+// Media has no height until it loads, so the pinned description's
+// ScrollTrigger gets measured as if the video/image above it were empty -
+// it then pins (and starts revealing) while the media is still on screen.
+// Re-measure once each one knows its size; batched to one refresh a frame.
+let refreshQueued = false;
+function refreshAfterMediaLoad() {
+  if (refreshQueued) return;
+  refreshQueued = true;
+  requestAnimationFrame(() => {
+    refreshQueued = false;
+    ScrollTrigger.refresh();
+  });
+}
 
 type Media = MediaItem;
 
@@ -38,11 +52,13 @@ function MediaBlock({
   title,
   index,
   isFirst,
+  videoMaxHeight = "70svh",
 }: {
   media: Media;
   title: string;
   index: number;
   isFirst?: boolean;
+  videoMaxHeight?: string;
 }) {
   const alignRight = index % 2 === 1;
 
@@ -69,13 +85,16 @@ function MediaBlock({
         data-hero-media={isFirst ? true : undefined}
         style={{
           // Videos are screen recordings - at half width their detail is
-          // unreadable, so they get most of the page width instead.
+          // unreadable, so they get more of the page width instead (the
+          // video itself is also height-capped, see below).
           width:
             media.type === "video"
-              ? "clamp(280px, 75vw, 1200px)"
+              ? "clamp(280px, 60vw, 960px)"
               : "clamp(240px, 38vw, 580px)",
           maxWidth: "100%",
           overflow: "hidden",
+          display: "flex",
+          justifyContent: alignRight ? "flex-end" : "flex-start",
         }}
       >
         {media.type === "video" ? (
@@ -87,13 +106,18 @@ function MediaBlock({
             loop
             playsInline
             tabIndex={-1}
-            style={mediaStyle}
+            onLoadedMetadata={refreshAfterMediaLoad}
+            // Auto width/height + both max bounds keeps the real ratio, so a
+            // square or portrait video fits the screen height instead of
+            // filling the frame's width.
+            style={{ ...mediaStyle, width: "auto", maxWidth: "100%", maxHeight: videoMaxHeight }}
           />
         ) : (
           <img
             data-reveal={alignRight ? "right" : "left"}
             src={media.src}
             alt={title}
+            onLoad={refreshAfterMediaLoad}
             style={mediaStyle}
           />
         )}
@@ -211,7 +235,15 @@ function Hero({ project }: { project: Project }) {
     <div style={{ position: "relative" }}>
       <div style={{ padding: "6.5rem clamp(2.5rem, 5vw, 5rem) 0" }}>
         <button
-          onClick={() => scrollToSection(router, "#grid-projects")}
+          // Back to the card this page was opened from. Featured panels
+          // already clear the navbar with their own band; grid cards don't.
+          onClick={() =>
+            scrollToSection(
+              router,
+              `#projet-${project.slug}`,
+              featuredProjects.some((p) => p.slug === project.slug) ? 0 : -100
+            )
+          }
           style={{
             fontSize: "0.7rem",
             textTransform: "uppercase",
@@ -391,7 +423,13 @@ export default function ProjectDetailView({ project }: { project: Project }) {
       <Hero project={project} />
 
       {first ? (
-        <MediaBlock media={first} title={project.title} index={0} isFirst />
+        <MediaBlock
+          media={first}
+          title={project.title}
+          index={0}
+          isFirst
+          videoMaxHeight={project.detailVideoMaxHeight}
+        />
       ) : (
         <ComingSoonBlock project={project} />
       )}
@@ -399,7 +437,13 @@ export default function ProjectDetailView({ project }: { project: Project }) {
       <ScrollColorText text={project.description} />
 
       {rest.map((item, i) => (
-        <MediaBlock key={item.src} media={item} title={project.title} index={i + 1} />
+        <MediaBlock
+          key={item.src}
+          media={item}
+          title={project.title}
+          index={i + 1}
+          videoMaxHeight={project.detailVideoMaxHeight}
+        />
       ))}
 
       {project.pdf && <PdfBlock pdf={project.pdf} />}
