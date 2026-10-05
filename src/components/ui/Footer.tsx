@@ -157,6 +157,19 @@ export default function Footer() {
           ))}
         </div>
       </div>
+
+      {/* ── Copyright ───────────────────────────────────────────── */}
+      <p
+        style={{
+          margin: 0,
+          padding: "0 clamp(2.5rem, 5vw, 5rem) 2rem",
+          fontSize: "0.7rem",
+          letterSpacing: "0.1em",
+          color: "rgba(248,247,244,0.7)",
+        }}
+      >
+        © {new Date().getFullYear()} Marine Bianchi. Tous droits réservés.
+      </p>
     </footer>
   );
 }
