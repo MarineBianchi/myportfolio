@@ -12,7 +12,7 @@ const BAND_H = 196;
 // Shared backdrop behind every panel's video - brand identity texture,
 // not the project's own photo. fond1/fond2/fond3 are also available for
 // reuse elsewhere.
-const PANEL_BACKDROP = "/img/fond-covers.jpg";
+const PANEL_BACKDROP = "/img/fond-covers.webp";
 
 // Vertical breathing room around each panel's video.
 const VIDEO_PAD_Y = "clamp(3rem, 9vh, 6rem)";
@@ -203,6 +203,7 @@ export default function Projects() {
                 src={project.backdrop}
                 alt=""
                 aria-hidden="true"
+                loading="lazy"
                 style={{
                   width: "100%",
                   height: "100%",
@@ -219,6 +220,7 @@ export default function Projects() {
                 src={PANEL_BACKDROP}
                 alt=""
                 aria-hidden="true"
+                loading="lazy"
                 style={{
                   width: "100%",
                   height: "100%",

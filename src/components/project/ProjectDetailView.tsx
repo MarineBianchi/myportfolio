@@ -7,6 +7,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { featuredProjects, type MediaItem, type Project } from "@/data/projects";
 import ScrollColorText from "@/components/project/ScrollColorText";
 import RevealImages from "@/components/project/RevealImages";
+import { imgSize } from "@/data/imageSizes";
 import Footer from "@/components/ui/Footer";
 import { PALETTE } from "@/components/ui/ThemeSection";
 import { scrollToSection } from "@/lib/scrollToSection";
@@ -117,6 +118,10 @@ function MediaBlock({
             data-reveal={alignRight ? "right" : "left"}
             src={media.src}
             alt={title}
+            // Real size reserves the height up front, so lazy loading
+            // doesn't shift what the pinned description has measured.
+            {...imgSize(media.src)}
+            loading={isFirst ? "eager" : "lazy"}
             onLoad={refreshAfterMediaLoad}
             style={mediaStyle}
           />

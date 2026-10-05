@@ -8,9 +8,9 @@ import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
-const PHOTO_A = "/img/Apropos1.JPG";
-const PHOTO_B = "/img/Apropos3.jpg";
-const BACKDROP = "/img/fond3.JPG";
+const PHOTO_A = "/img/Apropos1.webp";
+const PHOTO_B = "/img/Apropos3.webp";
+const BACKDROP = "/img/fond3.webp";
 
 // Sticky, not pinned - a GSAP `pin: true` inserts its pin-spacer on a
 // deferred frame, not synchronously, so anything else measured in the same
@@ -113,7 +113,7 @@ export default function PhotoShowcase() {
   if (reducedMotion) {
     return (
       <section className="relative h-lvh" style={{ zIndex: 20 }}>
-        <Image src={PHOTO_B} alt="" fill sizes="100vw" priority className="object-cover" />
+        <Image src={PHOTO_B} alt="" fill sizes="100vw" className="object-cover" />
       </section>
     );
   }
@@ -131,7 +131,7 @@ export default function PhotoShowcase() {
     >
       <div className="sticky top-0 h-lvh overflow-hidden">
         <div ref={bg} className="absolute inset-0 will-change-transform">
-          <Image src={BACKDROP} alt="" fill sizes="100vw" priority className="object-cover" />
+          <Image src={BACKDROP} alt="" fill sizes="100vw" className="object-cover" />
         </div>
         <div
           ref={frame}
@@ -154,7 +154,7 @@ export default function PhotoShowcase() {
           }
         >
           <div ref={a} className="absolute inset-0 will-change-transform">
-            <Image src={PHOTO_A} alt="" fill sizes="100vw" priority className="object-cover work-img" />
+            <Image src={PHOTO_A} alt="" fill sizes="100vw" className="object-cover work-img" />
           </div>
           <div ref={b} className="absolute inset-0 will-change-transform">
             <Image src={PHOTO_B} alt="" fill sizes="100vw" className="object-cover work-img" />

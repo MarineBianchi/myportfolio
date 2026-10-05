@@ -162,6 +162,7 @@ export default function OtherProjects() {
               <img
                 src={item.image}
                 alt={item.title}
+                loading="lazy"
                 draggable={false}
                 style={{
                   ...(isMobile

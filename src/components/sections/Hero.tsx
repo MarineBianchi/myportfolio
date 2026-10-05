@@ -8,17 +8,17 @@ type ReelItem = { type: "video"; src: string } | { type: "image"; src: string };
 
 const reelItems: ReelItem[] = [
   { type: "video",  src: "/videos/APIHIVE.mp4" },
-  { type: "image",  src: "/img/taco-loco-01.png" },
+  { type: "image",  src: "/img/taco-loco-01.webp" },
   { type: "video",  src: "/videos/E&D-video.mp4" },
-  { type: "image",  src: "/img/Urban-Keratin-01.jpg" },
-  { type: "image",  src: "/img/DrawTatoo-01.png" },
-  { type: "image",  src: "/img/mountains-updates-01.png" },
-  { type: "image",  src: "/img/jardin-de-nini-01.png" },
-  { type: "image",  src: "/img/ALO-01.jpg" },
-  { type: "image",  src: "/img/illustration-personnelles-01.png" },
-  { type: "image",  src: "/img/E&D_mockup-01.png" },
-  { type: "image",  src: "/img/taco-loco-04.jpg" },
-  { type: "image",  src: "/img/Urban-Keratin-02.jpg" },
+  { type: "image",  src: "/img/Urban-Keratin-01.webp" },
+  { type: "image",  src: "/img/DrawTatoo-01.webp" },
+  { type: "image",  src: "/img/mountains-updates-01.webp" },
+  { type: "image",  src: "/img/jardin-de-nini-01.webp" },
+  { type: "image",  src: "/img/ALO-01.webp" },
+  { type: "image",  src: "/img/illustration-personnelles-01.webp" },
+  { type: "image",  src: "/img/E&D_mockup-01.webp" },
+  { type: "image",  src: "/img/taco-loco-04.webp" },
+  { type: "image",  src: "/img/Urban-Keratin-02.webp" },
 ];
 
 const allItems = [...reelItems, ...reelItems];
@@ -196,7 +196,7 @@ Je crée des identités visuelles, des sites et des applications qui vous ressem
           {/* m2 - remplit toute la hauteur */}
           <div className="h-photo-1" style={{ flex: 5, minWidth: 0, position: "relative", overflow: "hidden" }}>
             <Image
-              src="/img/m2.png"
+              src="/img/m2.webp"
               alt="Marine Bianchi"
               fill
               sizes="(max-width: 768px) 45vw, 20vw"
@@ -208,7 +208,7 @@ Je crée des identités visuelles, des sites et des applications qui vous ressem
           {/* m3 - décalée vers le bas, déborde en bas */}
           <div className="h-photo-2" style={{ flex: 4, minWidth: 0, position: "relative", overflow: "hidden", marginTop: "clamp(3rem, 5vw, 6rem)" }}>
             <Image
-              src="/img/m3.jpg"
+              src="/img/m3.webp"
               alt=""
               fill
               sizes="(max-width: 768px) 40vw, 15vw"

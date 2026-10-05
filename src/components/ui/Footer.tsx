@@ -42,7 +42,7 @@ export default function Footer() {
       id="contact"
       data-cursor-theme="dark"
       style={{
-        backgroundImage: "linear-gradient(rgba(10,10,10,0.12), rgba(10,10,10,0.12)), url(/img/fond2.JPG)",
+        backgroundImage: "linear-gradient(rgba(10,10,10,0.12), rgba(10,10,10,0.12)), url(/img/fond2.webp)",
         backgroundSize: "cover",
         backgroundPosition: "center top",
         overflow: "hidden",

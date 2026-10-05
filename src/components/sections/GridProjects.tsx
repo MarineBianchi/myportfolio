@@ -5,6 +5,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { gridRows, type Project } from "@/data/projects";
 import ProjectLink from "@/components/ui/ProjectLink";
+import { imgSize } from "@/data/imageSizes";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -60,6 +61,8 @@ function ProjectEntry({ project, index }: { project: Project; index: number }) {
             <img
               src={project.image}
               alt={project.title}
+              {...imgSize(project.image)}
+              loading="lazy"
               draggable={false}
               className="gp-img"
               style={{ width: "100%", height: "auto", display: "block" }}
