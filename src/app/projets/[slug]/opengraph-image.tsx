@@ -54,7 +54,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
         <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
           {project && (
             <div style={{ display: "flex", fontSize: 24, color: "#9a9a9a", textTransform: "uppercase", letterSpacing: "0.1em" }}>
-              {project.category} · {project.year}
+              {project.category}
             </div>
           )}
           <div

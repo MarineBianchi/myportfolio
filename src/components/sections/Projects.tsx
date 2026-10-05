@@ -115,7 +115,7 @@ export default function Projects() {
               gap: "0.55rem",
             }}
           >
-            {/* Row 1: number + title ← → category + year + arrow */}
+            {/* Row 1: number + title ← → category + arrow */}
             <div
               style={{
                 display: "flex",
@@ -158,16 +158,6 @@ export default function Projects() {
                   }}
                 >
                   {project.category}
-                </span>
-                <span
-                  className="proj-meta"
-                  style={{
-                    fontFamily: "monospace",
-                    fontSize: "0.68rem",
-                    color: "var(--muted)",
-                  }}
-                >
-                  {project.year}
                 </span>
                 <span
                   style={{

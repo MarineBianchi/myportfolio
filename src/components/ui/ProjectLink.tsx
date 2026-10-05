@@ -54,6 +54,10 @@ export default function ProjectLink({ children, href, onClick, ...rest }: Projec
 
     e.preventDefault();
 
+    // No scrolling while the circle covers the screen - SmoothScroll
+    // restarts it once the new page has mounted.
+    (window as unknown as { lenis?: { stop: () => void } }).lenis?.stop();
+
     const rect = cursor.getBoundingClientRect();
     const fill = getComputedStyle(cursor).backgroundColor;
     const isFilled = fill && fill !== "transparent" && fill !== "rgba(0, 0, 0, 0)";

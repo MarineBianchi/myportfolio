@@ -396,7 +396,7 @@ function Hero({ project }: { project: Project }) {
             whiteSpace: "nowrap",
           }}
         >
-          {project.category} · {project.year}
+          {project.category}
         </span>
       </div>
     </div>

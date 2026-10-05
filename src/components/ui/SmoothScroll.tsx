@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 import Lenis from "lenis";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -13,6 +14,8 @@ interface SmoothScrollProps {
 
 export default function SmoothScroll({ children }: SmoothScrollProps) {
   const lenisRef = useRef<Lenis | null>(null);
+  const pathname = usePathname();
+  const firstPathRef = useRef(true);
 
   useEffect(() => {
     const lenis = new Lenis({
@@ -60,6 +63,23 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
       lenis.destroy();
     };
   }, []);
+
+  // Lenis keeps its own scroll target across client-side navigations: a
+  // wheel/trackpad scroll still easing out when a project is clicked (or
+  // one made while ProjectLink's transition covers the screen) carries the
+  // home page's far-down target over, and the new page opens on its footer.
+  // Every new page starts at the top instead (scrollToSection's own scroll
+  // runs later, so "back to a section" links still land where they aim).
+  useEffect(() => {
+    if (firstPathRef.current) {
+      firstPathRef.current = false;
+      return;
+    }
+    const lenis = lenisRef.current;
+    if (!lenis) return;
+    lenis.scrollTo(0, { immediate: true, force: true });
+    lenis.start();
+  }, [pathname]);
 
   return <>{children}</>;
 }
